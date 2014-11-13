@@ -7,20 +7,21 @@
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'wx_ext'
+gem 'wx_ext', '~> 0.0.1'
 ```
 
 And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install wx_ext
-
 ## Usage
 
-TODO: 用户管理接口
+使用请看spec/wx_ext/
+
+## 测试
+
+1. 修改 spec/wx_ext/weixin_spec.rb 文件中的账户密码
+2. rspec spec/wx_ext/weixin_spec.rb
 
 ## Contributing
 
