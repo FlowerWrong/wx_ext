@@ -1,4 +1,5 @@
-require "wx_ext/version"
+# encoding: UTF-8
+require 'wx_ext/version'
 require 'digest'
 require 'rest_client'
 require 'json'
@@ -6,7 +7,8 @@ require 'nokogiri'
 
 module WxExt
   class WeiXin
-    attr_accessor :account, :password, :home_url, :token, :user_name, :ticket_id, :ticket, :cookies, :operation_seq
+    attr_accessor :account, :password, :home_url, :token, :user_name, \
+                  :ticket_id, :ticket, :cookies, :operation_seq
     def initialize(account, password)
       @account = account
       @password = password
@@ -121,17 +123,6 @@ module WxExt
       app_msg_hash = JSON.parse msg_json.to_s
     end
 
-    # 获取 last_msg_id 和 fake_id
-    def get_ids # 未完成
-      url = "https://mp.weixin.qq.com/cgi-bin/message?t=message/list&count=20&day=7&token=#{@token}&lang=zh_CN"
-      resource = RestClient::Resource.new(url, cookies: @cookies)
-      res = resource.get
-      doc = Nokogiri::HTML(res.to_s)
-      doc.css('ul.message_list li').each do |li|
-        puts li.content
-      end
-    end
-
 		# 轮训新消息条数
 		def get_new_msg_num(last_msg_id)
       uri = "cgi-bin/getnewmsgnum?f=json&t=ajax-getmsgnum&lastmsgid=#{last_msg_id}&token=#{@token}&lang=zh_CN"
@@ -168,9 +159,40 @@ module WxExt
       res_json = JSON.parse res.to_s
 	  end
 
+    # 获取国家列表
+    def get_country_list
+      url = "https://mp.weixin.qq.com/cgi-bin/getregions?t=setting/ajax-getregions&id=0&token=#{@token}&lang=zh_CN&token=#{@token}&lang=zh_CN&f=json&ajax=1&random=#{rand}"
+      resource = RestClient::Resource.new(url, cookies: @cookies)
+      res = resource.get
+      res_json = JSON.parse res.to_s
+    end
+
+    # 获取每日可推送消息数
+    def get_day_msg_count
+      url = "https://mp.weixin.qq.com/cgi-bin/masssendpage?t=mass/send&token=#{@token}&lang=zh_CN"
+      res = RestClient.get(url, {cookies: @cookies})
+      day_msg_count = 0
+      msg_count_reg = /.*mass_send_left\s*:\s*can_verify_apply\s*\?\s*\'(\d*)\'\*/
+      if msg_count_reg =~ res.to_s
+        day_msg_count = $1
+      end
+      day_msg_count.to_i
+    end
+
+    # todo list
+    # 获取 last_msg_id 和 fake_id
+    def get_ids # 未完成
+      url = "https://mp.weixin.qq.com/cgi-bin/message?t=message/list&count=20&day=7&token=#{@token}&lang=zh_CN"
+      resource = RestClient::Resource.new(url, cookies: @cookies)
+      res = resource.get
+      doc = Nokogiri::HTML(res.to_s)
+      doc.css('ul.message_list li').each do |li|
+        puts li.content
+      end
+    end
+
 		# https://mp.weixin.qq.com/cgi-bin/message?t=message/list&token=1664040225&count=20&day=7
 		# https://mp.weixin.qq.com/cgi-bin/message?t=message/list&count=20&day=7&token=1664040225&lang=zh_CN
-
 
 		# https://mp.weixin.qq.com/cgi-bin/singlesend?t=ajax-response&f=json&token=1664040225&lang=zh_CN
 		def quick_reply
@@ -180,12 +202,21 @@ module WxExt
 		def collect_msg
     end
 
-    # 获取国家列表
-    def get_country_list
-      url = "https://mp.weixin.qq.com/cgi-bin/getregions?t=setting/ajax-getregions&id=0&token=#{@token}&lang=zh_CN&token=#{@token}&lang=zh_CN&f=json&ajax=1&random=#{rand}"
-      resource = RestClient::Resource.new(url, cookies: @cookies)
-      res = resource.get
-      res_json = JSON.parse res.to_s
+    private
+    def set_cookie(page, k, v)
+      case Capybara.current_session.driver
+      when Capybara::Poltergeist::Driver
+        page.driver.set_cookie(k,v)
+      when Capybara::RackTest::Driver
+        headers = {}
+        Rack::Utils.set_cookie_header!(headers,k,v)
+        cookie_string = headers['Set-Cookie']
+        Capybara.current_session.driver.browser.set_cookie(cookie_string)
+      when Capybara::Selenium::Driver
+        page.driver.browser.manage.add_cookie(:name=>k, :value=>v)
+      else
+        raise "no cookie-setter implemented for driver #{Capybara.current_session.driver.class.name}"
+      end
     end
   end
 end

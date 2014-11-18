@@ -1,26 +1,37 @@
+# encoding: UTF-8
 require 'spec_helper'
-
 
 describe WxExt::WeiXin do
   before(:all) do
-    @weixin = WxExt::WeiXin.new "fw", "123456"
+    @weixin = WxExt::WeiXin.new 'flowerwrong@hotmail.com', '1*flower@wrong*1'
   end
 
-  it "init method should init all params" do
+  it 'init method should init all params' do
     flag = @weixin.init
-    token = @weixin.token
-    puts "token = " + token
-    expect(token).to match(/\d+/)
+    if flag
+      token = @weixin.token
+      puts "token = #{token}"
+      expect(token).to match(/\d+/)
+    end
   end
 
-  # 未完待续
-  it "should get fakeids and msg ids" do
+  it 'should get day msg count' do
     flag = @weixin.init
-    res = @weixin.get_ids
-    # puts res
+    if flag
+      day_msg_count = @weixin.get_day_msg_count
+      expect(day_msg_count.to_s).to match(/\d*/)
+    end
   end
 
 =begin
+
+  # 未完待续
+  it 'should get fakeids and msg ids' do
+    flag = @weixin.init
+    res = @weixin.get_ids if flag
+    puts res.to_s
+  end
+
   it "should get new msg num" do
     flag = @weixin.init
     res_hash = @weixin.get_new_msg_num('201004139')
