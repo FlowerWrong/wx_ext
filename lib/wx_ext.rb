@@ -70,21 +70,26 @@ module WxExt
     end
 
     # 上传图片素材到素材中心
-    def upload_file(file, file_name, folder = "/cgi-bin/uploads")
+    def upload_file(file, file_name, folder = '/cgi-bin/uploads')
       upload_url = "https://mp.weixin.qq.com/cgi-bin/filetransfer?action=upload_material&f=json&writetype=doublewrite&groupid=1&ticket_id=#{@ticket_id}&ticket=#{@ticket}&token=#{@token}&lang=zh_CN"
-      response = RestClient.post upload_url, :file => file, \
-                                             :Filename => file_name, \
-                                             :folder => folder
-      res_hash = JSON.parse response.to_s
+      response = RestClient.post upload_url, file: file, \
+                                             Filename: file_name, \
+                                             folder: folder
+      JSON.parse response.to_s
     end
 
     # 发送单条图文消息到素材中心
     def upload_single_msg(single_msg_params)
-      post_single_msg_uri = "cgi-bin/operate_appmsg?t=ajax-response&sub=create&type=10&token=#{@token}&lang=zh_CN"
+      post_single_msg_uri = 'cgi-bin/operate_appmsg'\
+                            '?t=ajax-response&sub=create&type=10&token'\
+                            "=#{@token}&lang=zh_CN"
       post_single_msg_headers = {
-          referer: "https://mp.weixin.qq.com/cgi-bin/appmsg?t=media/appmsg_edit&action=edit&type=10&isMul=0&isNew=1&lang=zh_CN&token=#{@token}"
+        referer: 'https://mp.weixin.qq.com/cgi-bin/appmsg?t=media/appmsg_edit'\
+                 "&action=edit&type=10&isMul=0&isNew=1&lang=zh_CN&token=#{@token}"
       }
-      post_single_msg_resource = RestClient::Resource.new(@home_url, headers: post_single_msg_headers, cookies: @cookies)
+      post_single_msg_resource = RestClient::Resource.new(@home_url,
+                                 headers: post_single_msg_headers,
+                                 cookies: @cookies)
       post_single_msg_res = post_single_msg_resource[post_single_msg_uri].post single_msg_params
       # {"ret":"0", "msg":"OK"}
       res_hash = JSON.parse post_single_msg_res.to_s

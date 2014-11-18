@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe WxExt::WeiXin do
   before(:all) do
-    @weixin = WxExt::WeiXin.new 'fw', '11'
+    @weixin = WxExt::WeiXin.new 'flowerwrong@hotmail.com', '1*flower@wrong*1'
   end
 
   it 'init method should init all params' do
@@ -22,8 +22,6 @@ describe WxExt::WeiXin do
       expect(day_msg_count.to_s).to match(/\d*/)
     end
   end
-
-=begin
 
   # 未完待续
   it 'should get fakeids and msg ids' do
@@ -168,5 +166,4 @@ describe WxExt::WeiXin do
     puts msg_hash["app_msg_info"]["item"][0]["app_id"]
     expect(msg_hash["base_resp"]["ret"].to_s).to eql("0")
   end
-=end
 end
