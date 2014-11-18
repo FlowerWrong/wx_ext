@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe WxExt::WeiXin do
   before(:all) do
-    @weixin = WxExt::WeiXin.new "flowerwrong@hotmail.com", "1*flower@wrong*1"
+    @weixin = WxExt::WeiXin.new "fw", "123456"
   end
 
   it "init method should init all params" do
@@ -13,6 +13,7 @@ describe WxExt::WeiXin do
     expect(token).to match(/\d+/)
   end
 
+  # 未完待续
   it "should get fakeids and msg ids" do
     flag = @weixin.init
     res = @weixin.get_ids
