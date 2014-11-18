@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe WxExt::WeiXin do
   before(:all) do
-    @weixin = WxExt::WeiXin.new "login_account", "login_pass"
+    @weixin = WxExt::WeiXin.new "flowerwrong@hotmail.com", "1*flower@wrong*1"
   end
 
   it "init method should init all params" do
@@ -11,6 +11,34 @@ describe WxExt::WeiXin do
     token = @weixin.token
     puts "token = " + token
     expect(token).to match(/\d+/)
+  end
+
+  it "should get fakeids and msg ids" do
+    flag = @weixin.init
+    res = @weixin.get_ids
+    # puts res
+  end
+
+=begin
+  it "should get new msg num" do
+    flag = @weixin.init
+    res_hash = @weixin.get_new_msg_num('201004139')
+    puts res_hash
+    expect(res_hash['ret'].to_s).to eql('0')
+  end
+
+  it "should get contact info" do
+    flag = @weixin.init
+    res_hash = @weixin.get_contact_info('204060720')
+    puts res_hash
+    expect(res_hash['base_resp']['ret'].to_s).to eql('0')
+  end
+
+  it "should return a country list" do
+    flag = @weixin.init
+    res_hash = @weixin.get_country_list
+    puts res_hash
+    expect(res_hash["num"].to_s).to match(/\d+/)
   end
 
   it "upload_file method should return a right hash" do
@@ -128,5 +156,5 @@ describe WxExt::WeiXin do
     puts msg_hash["app_msg_info"]["item"][0]["app_id"]
     expect(msg_hash["base_resp"]["ret"].to_s).to eql("0")
   end
-
+=end
 end

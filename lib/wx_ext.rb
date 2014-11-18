@@ -2,6 +2,7 @@ require "wx_ext/version"
 require 'digest'
 require 'rest_client'
 require 'json'
+require 'nokogiri'
 
 module WxExt
   class WeiXin
@@ -118,6 +119,73 @@ module WxExt
       app_msg_url = "https://mp.weixin.qq.com/cgi-bin/appmsg?type=10&action=list&begin=#{msg_begin}&count=#{msg_count}&f=json&token=#{@token}&lang=zh_CN&token=#{@token}&lang=zh_CN&f=json&ajax=1&random=#{rand}"
       msg_json = RestClient.get app_msg_url, {cookies: @cookies}
       app_msg_hash = JSON.parse msg_json.to_s
+    end
+
+    # 获取 last_msg_id 和 fake_id
+    def get_ids # 未完成
+      url = "https://mp.weixin.qq.com/cgi-bin/message?t=message/list&count=20&day=7&token=#{@token}&lang=zh_CN"
+      resource = RestClient::Resource.new(url, cookies: @cookies)
+      res = resource.get
+      doc = Nokogiri::HTML(res.to_s)
+      doc.css('ul.message_list li').each do |li|
+        puts li.content
+      end
+    end
+
+		# 轮训新消息条数
+		def get_new_msg_num(last_msg_id)
+      uri = "cgi-bin/getnewmsgnum?f=json&t=ajax-getmsgnum&lastmsgid=#{last_msg_id}&token=#{@token}&lang=zh_CN"
+      post_params = {
+        ajax: 1,
+        f: 'json',
+        lang: 'zh_CN',
+        random: rand,
+        token: @token
+      }
+      post_headers = {
+          referer: "https://mp.weixin.qq.com/cgi-bin/message?t=message/list&count=20&day=7&token=#{@token}&lang=zh_CN"
+      }
+      resource = RestClient::Resource.new(@home_url, :headers => post_headers, cookies: @cookies)
+      res = resource[uri].post post_params
+      res_json = JSON.parse res.to_s
+		end
+
+		# 获取联系人信息
+		def get_contact_info(fakeid)
+      uri = "cgi-bin/getcontactinfo?t=ajax-getcontactinfo&lang=zh_CN&fakeid=#{fakeid}"
+      post_params = {
+        ajax: 1,
+        f: 'json',
+        lang: 'zh_CN',
+        random: rand,
+        token: @token
+      }
+      post_headers = {
+          referer: "https://mp.weixin.qq.com/cgi-bin/contactmanage?t=user/index&pagesize=10&pageidx=0&type=0&token=#{@token}&lang=zh_CN"
+      }
+      resource = RestClient::Resource.new(@home_url, :headers => post_headers, cookies: @cookies)
+      res = resource[uri].post post_params
+      res_json = JSON.parse res.to_s
+	  end
+
+		# https://mp.weixin.qq.com/cgi-bin/message?t=message/list&token=1664040225&count=20&day=7
+		# https://mp.weixin.qq.com/cgi-bin/message?t=message/list&count=20&day=7&token=1664040225&lang=zh_CN
+
+
+		# https://mp.weixin.qq.com/cgi-bin/singlesend?t=ajax-response&f=json&token=1664040225&lang=zh_CN
+		def quick_reply
+		end
+
+		# https://mp.weixin.qq.com/cgi-bin/setstarmessage?t=ajax-setstarmessage&token=1664040225&lang=zh_CN
+		def collect_msg
+    end
+
+    # 获取国家列表
+    def get_country_list
+      url = "https://mp.weixin.qq.com/cgi-bin/getregions?t=setting/ajax-getregions&id=0&token=#{@token}&lang=zh_CN&token=#{@token}&lang=zh_CN&f=json&ajax=1&random=#{rand}"
+      resource = RestClient::Resource.new(url, cookies: @cookies)
+      res = resource.get
+      res_json = JSON.parse res.to_s
     end
   end
 end
