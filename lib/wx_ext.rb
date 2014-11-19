@@ -28,17 +28,17 @@ module WxExt
       home_url = @home_url
 
       login_headers = {
-          referer: 'https://mp.weixin.qq.com/'
+        referer: 'https://mp.weixin.qq.com/'
       }
       login_params = {
-          username: login_name,
-          pwd: password,
-          imgcode: '',
-          f: 'json'
+        username: login_name,
+        pwd: password,
+        imgcode: '',
+        f: 'json'
       }
 
-      login_resource = RestClient::Resource.new(home_url, :headers => login_headers)
-      login_res = login_resource['cgi-bin/login'].post login_params, :content_type => 'text/plain'
+      login_resource = RestClient::Resource.new(home_url, headers: login_headers)
+      login_res = login_resource['cgi-bin/login'].post login_params, content_type: 'text/plain'
       login_cookies = login_res.cookies
       login_res_str = login_res.to_s
       # {"base_resp"=>{"ret"=>0, "err_msg"=>"ok"}, "redirect_url"=>"/cgi-bin/home?t=home/index&lang=zh_CN&token=1869497342"}

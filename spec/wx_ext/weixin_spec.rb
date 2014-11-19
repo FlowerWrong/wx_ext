@@ -51,7 +51,7 @@ describe WxExt::WeiXin do
     expect(res_hash["num"].to_s).to match(/\d+/)
   end
 
-  it "upload_file method should return a right hash" do
+  it 'upload_file method should return a right hash' do
     flag = @weixin.init
     puts @weixin.token
     puts @weixin.ticket_id
