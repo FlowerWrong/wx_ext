@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe WxExt::WeiXin do
   before(:all) do
-    @weixin = WxExt::WeiXin.new 'flowerwrong@hotmail.com', '1*flower@wrong*1'
+    @weixin = WxExt::WeiXin.new 'flowerwrong', '11111111'
   end
 
   it 'should login to the mp' do
