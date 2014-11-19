@@ -83,7 +83,10 @@ module WxExt
 
     # 上传图片素材到素材中心
     def upload_file(file, file_name, folder = '/cgi-bin/uploads')
-      upload_url = "https://mp.weixin.qq.com/cgi-bin/filetransfer?action=upload_material&f=json&writetype=doublewrite&groupid=1&ticket_id=#{@ticket_id}&ticket=#{@ticket}&token=#{@token}&lang=zh_CN"
+      upload_url = 'https://mp.weixin.qq.com/cgi-bin/filetransfer'\
+                   '?action=upload_material&f=json&writetype=doublewrite'\
+                   "&groupid=1&ticket_id=#{@ticket_id}"\
+                   "&ticket=#{@ticket}&token=#{@token}&lang=zh_CN"
       response = RestClient.post upload_url, file: file, \
                                              Filename: file_name, \
                                              folder: folder
@@ -234,9 +237,6 @@ module WxExt
       return_hash
     end
 
-		# https://mp.weixin.qq.com/cgi-bin/message?t=message/list&token=1664040225&count=20&day=7
-		# https://mp.weixin.qq.com/cgi-bin/message?t=message/list&count=20&day=7&token=1664040225&lang=zh_CN
-
 		# https://mp.weixin.qq.com/cgi-bin/singlesend?t=ajax-response&f=json&token=1664040225&lang=zh_CN
 		def quick_reply
 		end
@@ -245,23 +245,5 @@ module WxExt
 		def collect_msg
     end
 
-    private
-
-    def set_cookie(page, k, v)
-      case Capybara.current_session.driver
-      when Capybara::Poltergeist::Driver
-        page.driver.set_cookie(k, v)
-      when Capybara::RackTest::Driver
-        headers = {}
-        Rack::Utils.set_cookie_header!(headers, k, v)
-        cookie_string = headers['Set-Cookie']
-        Capybara.current_session.driver.browser.set_cookie(cookie_string)
-      when Capybara::Selenium::Driver
-        page.driver.browser.manage.add_cookie(name: k, value: v)
-      else
-        fail 'no cookie-setter implemented for driver '\
-              "#{Capybara.current_session.driver.class.name}"
-      end
-    end
   end
 end

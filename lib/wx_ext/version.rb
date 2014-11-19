@@ -1,4 +1,4 @@
 # encoding: UTF-8
 module WxExt
-  VERSION = "0.0.2"
+  VERSION = "0.0.4"
 end
