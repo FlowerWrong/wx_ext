@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'bundler/setup'
 Bundler.setup
 
