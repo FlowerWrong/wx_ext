@@ -21,7 +21,25 @@ describe WxExt::WeiXin do
     end
   end
 
-=begin
+  it 'should get fakeids and msg ids' do
+    res_hash = @weixin.login
+    flag = @weixin.init
+    res_hash = @weixin.get_msg_item if flag
+    puts '==' * 20
+    puts res_hash
+    expect(res_hash[:status]).to eql(0)
+  end
+
+  it "should get new msg num" do
+    res_hash = @weixin.login
+    flag = @weixin.init
+    msg_res_hash = @weixin.get_msg_item if flag
+    res_hash = @weixin.get_new_msg_num(msg_res_hash[:latest_msg_id=])
+    puts '==' * 20
+    puts res_hash
+    expect(res_hash['ret'].to_s).to eql('0')
+  end
+
   it 'should get day msg count' do
     res_hash = @weixin.login
     flag = @weixin.init
@@ -29,22 +47,6 @@ describe WxExt::WeiXin do
       day_msg_count = @weixin.get_day_msg_count
       expect(day_msg_count.to_s).to match(/\d*/)
     end
-  end
-
-  # 未完待续
-  it 'should get fakeids and msg ids' do
-    res_hash = @weixin.login
-    flag = @weixin.init
-    res = @weixin.get_ids if flag
-    puts res.to_s
-  end
-
-  it "should get new msg num" do
-    res_hash = @weixin.login
-    flag = @weixin.init
-    res_hash = @weixin.get_new_msg_num('201004139')
-    puts res_hash
-    expect(res_hash['ret'].to_s).to eql('0')
   end
 
   it "should get contact info" do
@@ -151,8 +153,8 @@ describe WxExt::WeiXin do
 
     msg_params = {
         ajax: 1,
-        appmsgid: app_msg_id, # 图文appid
-        cardlimit: 1, # 发送限制条数
+        appmsgid: app_msg_id,
+        cardlimit: 1,
         city: '',
         country: '',
         province: '',
@@ -160,7 +162,7 @@ describe WxExt::WeiXin do
         groupid: '-1',
         imgcode: '',
         lang: 'zh_CN',
-        operation_seq: @weixin.operation_seq, #
+        operation_seq: @weixin.operation_seq,
         random: rand,
         sex: 0,
         synctxweibo: 0,
@@ -183,5 +185,4 @@ describe WxExt::WeiXin do
     puts msg_hash["app_msg_info"]["item"][0]["app_id"]
     expect(msg_hash["base_resp"]["ret"].to_s).to eql("0")
   end
-=end
 end

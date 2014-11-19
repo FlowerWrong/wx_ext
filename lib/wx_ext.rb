@@ -211,17 +211,27 @@ module WxExt
       day_msg_count.to_i
     end
 
-    # todo list
-    # 获取 last_msg_id 和 fake_id
-    def get_ids # 未完成
+    # 获取 last_msg_id 和 msg_item
+    def get_msg_item
       url = 'https://mp.weixin.qq.com/cgi-bin/message?t=message/list&count=20'\
             "&day=7&token=#{@token}&lang=zh_CN"
       resource = RestClient::Resource.new(url, cookies: @cookies)
       res = resource.get
-      doc = Nokogiri::HTML(res.to_s)
-      doc.css('ul.message_list li').each do |li|
-        puts li.content
+      reg = /.*total_count\s*:\s*(\d*).*latest_msg_id\s*:\s*\'(\d*)\'.*list\s*:\s*\((.*)\)\.msg_item,.*/m
+      return_hash = {
+        status: -1,
+        msg: 'system_error'
+      }
+      if reg =~ res.to_s
+        return_hash = {
+          status: 0,
+          msg: 'ok',
+          total_count: $1,
+          latest_msg_id: $2,
+          msg_item: JSON.parse($3)['msg_item']
+        }
       end
+      return_hash
     end
 
 		# https://mp.weixin.qq.com/cgi-bin/message?t=message/list&token=1664040225&count=20&day=7
