@@ -6,7 +6,13 @@ describe WxExt::WeiXin do
     @weixin = WxExt::WeiXin.new 'flowerwrong@hotmail.com', '1*flower@wrong*1'
   end
 
-  it 'init method should init all params' do
+  it 'should login to the mp' do
+    res_hash = @weixin.login
+    expect(res_hash[:status]).to eql(0)
+  end
+
+  it 'should init method should init all params' do
+    res_hash = @weixin.login
     flag = @weixin.init
     if flag
       token = @weixin.token
@@ -15,7 +21,9 @@ describe WxExt::WeiXin do
     end
   end
 
+=begin
   it 'should get day msg count' do
+    res_hash = @weixin.login
     flag = @weixin.init
     if flag
       day_msg_count = @weixin.get_day_msg_count
@@ -25,12 +33,14 @@ describe WxExt::WeiXin do
 
   # 未完待续
   it 'should get fakeids and msg ids' do
+    res_hash = @weixin.login
     flag = @weixin.init
     res = @weixin.get_ids if flag
     puts res.to_s
   end
 
   it "should get new msg num" do
+    res_hash = @weixin.login
     flag = @weixin.init
     res_hash = @weixin.get_new_msg_num('201004139')
     puts res_hash
@@ -38,6 +48,7 @@ describe WxExt::WeiXin do
   end
 
   it "should get contact info" do
+    res_hash = @weixin.login
     flag = @weixin.init
     res_hash = @weixin.get_contact_info('204060720')
     puts res_hash
@@ -45,13 +56,15 @@ describe WxExt::WeiXin do
   end
 
   it "should return a country list" do
+    res_hash = @weixin.login
     flag = @weixin.init
     res_hash = @weixin.get_country_list
     puts res_hash
     expect(res_hash["num"].to_s).to match(/\d+/)
   end
 
-  it 'upload_file method should return a right hash' do
+  it 'should upload_file method should return a right hash' do
+    res_hash = @weixin.login
     flag = @weixin.init
     puts @weixin.token
     puts @weixin.ticket_id
@@ -63,7 +76,8 @@ describe WxExt::WeiXin do
     expect(file_hash["base_resp"]["ret"].to_s).to eql("0")
   end
 
-  it "upload_single_msg method should upload a msg to sucaizhongxin" do
+  it "should upload_single_msg method should upload a msg to sucaizhongxin" do
+    res_hash = @weixin.login
     flag = @weixin.init
     file = File.new("/home/yang/dev/ruby/gem/hack_wx/spec/hack_wx/test_spec.jpg", 'rb')
     file_hash = @weixin.upload_file(file, "test_spec.jpg")
@@ -91,7 +105,8 @@ describe WxExt::WeiXin do
     expect(msg_hash["ret"].to_s).to eql("0")
   end
 
-  it "upload_multi_msg method should upload multi msg to sucaizhongxin" do
+  it "should upload_multi_msg method should upload multi msg to sucaizhongxin" do
+    res_hash = @weixin.login
     flag = @weixin.init
     file = File.new("/home/yang/dev/ruby/gem/hack_wx/spec/hack_wx/test_spec.jpg", 'rb')
     file_hash = @weixin.upload_file(file, "test_spec.jpg")
@@ -126,7 +141,8 @@ describe WxExt::WeiXin do
     expect(msg_hash["ret"].to_s).to eql("0")
   end
 
-  it "broadcast msg to all user should return ok" do
+  it "should broadcast msg to all user" do
+    res_hash = @weixin.login
     flag = @weixin.init
 
     msg_hash = @weixin.get_app_msg_list
@@ -158,7 +174,8 @@ describe WxExt::WeiXin do
     expect(msg_hash["ret"].to_s).to eql("0")
   end
 
-  it "get app msg list return json" do
+  it 'should get app msg list with json' do
+    res_hash = @weixin.login
     flag = @weixin.init
 
     msg_hash = @weixin.get_app_msg_list
@@ -166,4 +183,5 @@ describe WxExt::WeiXin do
     puts msg_hash["app_msg_info"]["item"][0]["app_id"]
     expect(msg_hash["base_resp"]["ret"].to_s).to eql("0")
   end
+=end
 end
