@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe WxExt::WeiXin do
   before(:all) do
-    @weixin = WxExt::WeiXin.new 'flowerwrong', '11111111'
+    @weixin = WxExt::WeiXin.new 'flowerwrong@hotmail.com', '1*flower@wrong*1'
   end
 
   it 'should login to the mp' do
@@ -18,6 +18,51 @@ describe WxExt::WeiXin do
       token = @weixin.token
       puts "token = #{token}"
       expect(token).to match(/\d+/)
+    end
+  end
+
+  it 'should reply to yang' do
+    res_hash = @weixin.login
+    flag = @weixin.init
+    if flag
+      quick_reply_res_hash = @weixin.quick_reply('测试回复2', 201123100, 204060720)
+      puts '==' * 20
+      puts quick_reply_res_hash
+      expect(quick_reply_res_hash['base_resp']['ret'].to_s).to eql('0')
+    end
+  end
+
+  it 'should star msg' do
+    res_hash = @weixin.login
+    flag = @weixin.init
+    if flag
+      star_res_hash = @weixin.collect_msg('201123100')
+      puts '==' * 20
+      puts star_res_hash
+      expect(star_res_hash['ret'].to_s).to eql('0')
+    end
+  end
+
+  it 'should un star msg' do
+    res_hash = @weixin.login
+    flag = @weixin.init
+    if flag
+      star_res_hash = @weixin.un_collect_msg('201123100')
+      puts '==' * 20
+      puts star_res_hash
+      expect(star_res_hash['ret'].to_s).to eql('0')
+    end
+  end
+
+
+  it 'should get fans count' do
+    res_hash = @weixin.login
+    flag = @weixin.init
+    if flag
+      fans_res_hash = @weixin.get_fans_count
+      puts '==' * 20
+      puts fans_res_hash
+      expect(fans_res_hash[:status]).to eql(0)
     end
   end
 

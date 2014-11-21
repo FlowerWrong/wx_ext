@@ -237,13 +237,105 @@ module WxExt
       return_hash
     end
 
-		# https://mp.weixin.qq.com/cgi-bin/singlesend?t=ajax-response&f=json&token=1664040225&lang=zh_CN
-		def quick_reply
+    def get_fans_count
+      url = 'https://mp.weixin.qq.com/cgi-bin/contactmanage?t=user/index'\
+            "&pagesize=10&pageidx=0&type=0&token=#{ @token }&lang=zh_CN"
+      res = RestClient.get(url, cookies: @cookies)
+      reg = /.*pageIdx\s*:\s*(\d*).*pageCount\s*:\s*(\d*).*pageSize\s*:\s*(\d*).*groupsList\s*:\s*\((.*)\)\.groups,.*friendsList\s*:\s*\((.*)\)\.contacts,.*totalCount\s*:\s*\'(\d)\'\s*\*\s*.*/m
+      return_hash = {
+        status: -1,
+        msg: 'system_error'
+      }
+      if reg =~ res.to_s
+        return_hash = {
+          status: 0,
+          msg: 'ok',
+          page_index: $1,
+          page_count: $2,
+          page_size: $3,
+          group_list: JSON.parse($4)['groups'],
+          friends_list: JSON.parse($5)['contacts'],
+          total_count: $6
+        }
+      end
+      return_hash
+    end
+
+		# https://mp.weixin.qq.com/cgi-bin/singlesend?t=ajax-response&f=json&token=593714377&lang=zh_CN
+    # {"base_resp":{"ret":10706,"err_msg":"customer block"}} 48小时内的才行
+    # {"base_resp":{"ret":0,"err_msg":"ok"}}
+    # 快速回复
+		def quick_reply(content, quickreplyid, tofakeid)
+      post_uri = 'cgi-bin/singlesend'\
+                 "?t=ajax-response&f=json&token=#{ @token }&lang=zh_CN"
+      params = {
+        ajax: 1,
+        content: content,
+        f: 'json',
+        imgcode: '',
+        lang: 'zh_CN',
+        mask: false,
+        quickreplyid: quickreplyid,
+        random: rand,
+        tofakeid: tofakeid,
+        token: @token,
+        type: 1
+      }
+      headers = {
+        referer: 'https://mp.weixin.qq.com/cgi-bin/message'\
+                 "?t=message/list&count=20&day=7&token=#{ @token }&lang=zh_CN"
+      }
+      resource = RestClient::Resource.new(@home_url, headers: headers,
+                                                     cookies: @cookies)
+      res = resource[post_uri].post params
+      JSON.parse res.to_s
 		end
 
 		# https://mp.weixin.qq.com/cgi-bin/setstarmessage?t=ajax-setstarmessage&token=1664040225&lang=zh_CN
-		def collect_msg
+    # { "ret":0, "msg":"sys ok"}
+    # 收藏消息
+		def collect_msg(msgid)
+      uri = "cgi-bin/setstarmessage?t=ajax-setstarmessage&token=#{ @token }&lang=zh_CN"
+      params = {
+        ajax: 1,
+        f: 'json',
+        lang: 'zh_CN',
+        msgid: msgid,
+        random: rand,
+        token: @token,
+        value: 1
+      }
+      headers = {
+        referer: 'https://mp.weixin.qq.com/cgi-bin/message'\
+                 "?t=message/list&token=#{ @token }&count=20&day=7"
+      }
+      resource = RestClient::Resource.new(@home_url, headers: headers,
+                                                     cookies: @cookies)
+      res = resource[uri].post params
+      JSON.parse res.to_s
     end
 
+    # 取消收藏消息
+    def un_collect_msg(msgid)
+      uri = "cgi-bin/setstarmessage?t=ajax-setstarmessage&token=#{ @token }&lang=zh_CN"
+      params = {
+        ajax: 1,
+        f: 'json',
+        lang: 'zh_CN',
+        msgid: msgid,
+        random: rand,
+        token: @token,
+        value: 0
+      }
+      headers = {
+        referer: 'https://mp.weixin.qq.com/cgi-bin/message'\
+                 "?t=message/list&token=#{ @token }&count=20&day=7"
+      }
+      resource = RestClient::Resource.new(@home_url, headers: headers,
+                                          cookies: @cookies)
+      res = resource[uri].post params
+      # { "ret":0, "msg":"sys ok"}
+      JSON.parse res.to_s
+    end
   end
 end
