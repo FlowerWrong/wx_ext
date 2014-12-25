@@ -6,6 +6,18 @@ require 'json'
 require 'nokogiri'
 
 module WxExt
+  def self.root
+    File.dirname __dir__
+  end
+
+  def self.lib
+    File.join root, 'lib'
+  end
+
+  def self.spec
+    File.join root, 'spec'
+  end
+
   class WeiXin
     attr_accessor :account, :password, :home_url, :token, :user_name, \
                   :ticket_id, :ticket, :cookies, :operation_seq
@@ -124,6 +136,22 @@ module WxExt
       post_msg_res = resource[uri].post msg_params
       # {"ret":"0", "msg":"OK"}
       JSON.parse post_msg_res.to_s
+    end
+
+    # 图文预览功能
+    def preview_msg(msg_params_with_name)
+      uri = 'cgi-bin/operate_appmsg?sub=preview&t=ajax-appmsg-preview'\
+            "&type=10&token=#{@token}&lang=zh_CN"
+      headers = {
+        referer: 'https://mp.weixin.qq.com/cgi-bin/appmsg?t=media/appmsg_edit'\
+                 "&action=edit&type=10&isMul=0&isNew=1&lang=zh_CN&token=#{@token}"
+      }
+      resource = RestClient::Resource.new(@home_url, headers: headers,
+                                                     cookies: @cookies)
+
+      res = resource[uri].post msg_params_with_name
+      # {"ret":"0", "msg":"preview send success!", "appMsgId":"201796045", "fakeid":""}
+      JSON.parse res.to_s
     end
 
     # 群发图文消息

@@ -21,6 +21,38 @@ describe WxExt::WeiXin do
     end
   end
 
+  it "should preview msg method should preview a msg to me" do
+    res_hash = @weixin.login
+    flag = @weixin.init
+    file = File.new(File.join(WxExt.spec, "test.png"), 'rb')
+    file_hash = @weixin.upload_file(file, "test.png")
+    file_id = file_hash["content"]
+    msg_params_with_name = {
+      AppMsgId: '',
+      ajax: 1,
+      author0: '作者' + rand.to_s,
+      content0: '正文' + rand.to_s,
+      count: 1,
+      digest0: 'test摘要' + rand.to_s,
+      f: 'json',
+      fileid0: file_id,
+      lang: 'zh_CN',
+      preusername: 'nan474947',
+      random: rand,
+      show_cover_pic0: 1, # 0 => 封面图片不显示在正文中
+      sourceurl0: 'http://thecampus.cc/' + rand.to_s,
+      title0: 'test标题' + rand.to_s,
+      token: @weixin.token,
+      vid: ''
+    }
+
+    msg_hash = @weixin.preview_msg(msg_params_with_name)
+    puts "==" * 20
+    puts msg_hash
+    expect(msg_hash["ret"].to_s).to eql("0")
+  end
+
+
   it 'should reply to yang' do
     res_hash = @weixin.login
     flag = @weixin.init
@@ -116,8 +148,8 @@ describe WxExt::WeiXin do
     puts @weixin.token
     puts @weixin.ticket_id
     puts @weixin.ticket
-    file = File.new("/home/yang/dev/ruby/gem/hack_wx/spec/hack_wx/test_spec.jpg", 'rb')
-    file_hash = @weixin.upload_file(file, "test_spec.jpg")
+    file = File.new(File.join(WxExt.spec, "test.png"), 'rb')
+    file_hash = @weixin.upload_file(file, "test.png")
     puts "==" * 20
     puts file_hash
     expect(file_hash["base_resp"]["ret"].to_s).to eql("0")
@@ -126,8 +158,8 @@ describe WxExt::WeiXin do
   it "should upload_single_msg method should upload a msg to sucaizhongxin" do
     res_hash = @weixin.login
     flag = @weixin.init
-    file = File.new("/home/yang/dev/ruby/gem/hack_wx/spec/hack_wx/test_spec.jpg", 'rb')
-    file_hash = @weixin.upload_file(file, "test_spec.jpg")
+    file = File.new(File.join(WxExt.spec, "test.png"), 'rb')
+    file_hash = @weixin.upload_file(file, "test.png")
     file_id = file_hash["content"]
     single_msg_params = {
         AppMsgId: '',
@@ -140,7 +172,7 @@ describe WxExt::WeiXin do
         fileid0: file_id,
         lang: 'zh_CN',
         random: rand,
-        show_cover_pic0: 1,
+        show_cover_pic0: 1, # 0 => 封面图片不显示在正文中
         sourceurl0: 'http://thecampus.cc/' + rand.to_s,
         title0: 'test标题' + rand.to_s,
         token: @weixin.token,
@@ -155,8 +187,8 @@ describe WxExt::WeiXin do
   it "should upload_multi_msg method should upload multi msg to sucaizhongxin" do
     res_hash = @weixin.login
     flag = @weixin.init
-    file = File.new("/home/yang/dev/ruby/gem/hack_wx/spec/hack_wx/test_spec.jpg", 'rb')
-    file_hash = @weixin.upload_file(file, "test_spec.jpg")
+    file = File.new(File.join(WxExt.spec, "test.png"), 'rb')
+    file_hash = @weixin.upload_file(file, "test.png")
     file_id = file_hash["content"]
     msg_params = {
         AppMsgId: '',
@@ -230,4 +262,5 @@ describe WxExt::WeiXin do
     puts msg_hash["app_msg_info"]["item"][0]["app_id"]
     expect(msg_hash["base_resp"]["ret"].to_s).to eql("0")
   end
+
 end
