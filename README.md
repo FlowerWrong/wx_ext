@@ -7,7 +7,7 @@
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'wx_ext', '~> 0.0.5'
+gem 'wx_ext', '~> 0.0.6'
 ```
 
 And then execute:

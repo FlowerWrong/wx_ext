@@ -5,7 +5,7 @@ describe WxExt::WeiXin do
   before(:all) do
     @weixin = WxExt::WeiXin.new 'flowerwrong@hotmail.com', '1*flower@wrong*1'
   end
-
+=begin
   it 'should login to the mp' do
     res_hash = @weixin.login
     expect(res_hash[:status]).to eql(0)
@@ -64,6 +64,7 @@ describe WxExt::WeiXin do
     end
   end
 
+
   it 'should star msg' do
     res_hash = @weixin.login
     flag = @weixin.init
@@ -85,7 +86,7 @@ describe WxExt::WeiXin do
       expect(star_res_hash['ret'].to_s).to eql('0')
     end
   end
-
+=end
 
   it 'should get fans count' do
     res_hash = @weixin.login
@@ -98,15 +99,20 @@ describe WxExt::WeiXin do
     end
   end
 
-  it 'should get fakeids and msg ids' do
+  it 'should get total_count, count, day, frommsgid, can_search_msg, offset, action=search, keyword, last_msg_id, filterivrmsg=0/1 和 msg_items' do
+
     res_hash = @weixin.login
     flag = @weixin.init
-    res_hash = @weixin.get_msg_item if flag
-    puts '==' * 20
-    puts res_hash
-    expect(res_hash[:status]).to eql(0)
+    if flag
+      res_hash = @weixin.get_msg_items(20, 7, 1, '', '', '', '')
+      puts '==' * 20
+      puts res_hash
+      expect(res_hash[:status]).to eql(0)
+    else
+      puts 'init failed'
+    end
   end
-
+=begin
   it "should get new msg num" do
     res_hash = @weixin.login
     flag = @weixin.init
@@ -262,5 +268,5 @@ describe WxExt::WeiXin do
     puts msg_hash["app_msg_info"]["item"][0]["app_id"]
     expect(msg_hash["base_resp"]["ret"].to_s).to eql("0")
   end
-
+=end
 end

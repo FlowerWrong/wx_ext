@@ -242,13 +242,14 @@ module WxExt
       day_msg_count.to_i
     end
 
-    # 获取 last_msg_id 和 msg_item
-    def get_msg_item
-      url = 'https://mp.weixin.qq.com/cgi-bin/message?t=message/list&count=20'\
-            "&day=7&token=#{@token}&lang=zh_CN"
+    # 获取 total_count, count, day, frommsgid, can_search_msg, offset, action=search, keyword, last_msg_id, filterivrmsg=0/1 和 msg_items
+    def get_msg_items(count = 20, day = 7, filterivrmsg = 1, action='', keyword='', frommsgid='', offset='')
+      url = 'https://mp.weixin.qq.com/cgi-bin/message?t=message/list'\
+            "&action=#{action}&keyword=#{keyword}&frommsgid=#{frommsgid}&offset=#{offset}&count=#{count}"\
+            "&day=#{day}filterivrmsg=#{filterivrmsg}&token=#{@token}&lang=zh_CN"
       resource = RestClient::Resource.new(url, cookies: @cookies)
       res = resource.get
-      reg = /.*total_count\s*:\s*(\d*).*latest_msg_id\s*:\s*\'(\d*)\'.*list\s*:\s*\((.*)\)\.msg_item,.*/m
+      reg = /.*total_count\s*:\s*(\d*).*latest_msg_id\s*:\s*\'(\d*)\'.*list\s*:\s*\((.*)\)\.msg_item,.*filterivrmsg\s*:\s*\"(\d*)\".*/m
       return_hash = {
         status: -1,
         msg: 'system_error'
@@ -259,12 +260,21 @@ module WxExt
           msg: 'ok',
           total_count: $1,
           latest_msg_id: $2,
-          msg_item: JSON.parse($3)['msg_item']
+          count: 20,
+          day: 7,
+          frommsgid: '',
+          can_search_msg: '1',
+          offset: '',
+          action: '',
+          keyword: '',
+          msg_items: JSON.parse($3)['msg_item'],
+          filterivrmsg: $4
         }
       end
       return_hash
     end
 
+    # 获取粉丝数目
     def get_fans_count
       url = 'https://mp.weixin.qq.com/cgi-bin/contactmanage?t=user/index'\
             "&pagesize=10&pageidx=0&type=0&token=#{ @token }&lang=zh_CN"
@@ -289,7 +299,6 @@ module WxExt
       return_hash
     end
 
-		# https://mp.weixin.qq.com/cgi-bin/singlesend?t=ajax-response&f=json&token=593714377&lang=zh_CN
     # {"base_resp":{"ret":10706,"err_msg":"customer block"}} 48小时内的才行
     # {"base_resp":{"ret":0,"err_msg":"ok"}}
     # 快速回复
