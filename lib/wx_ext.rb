@@ -279,7 +279,7 @@ module WxExt
       url = 'https://mp.weixin.qq.com/cgi-bin/contactmanage?t=user/index'\
             "&pagesize=10&pageidx=0&type=0&token=#{ @token }&lang=zh_CN"
       res = RestClient.get(url, cookies: @cookies)
-      reg = /.*pageIdx\s*:\s*(\d*).*pageCount\s*:\s*(\d*).*pageSize\s*:\s*(\d*).*groupsList\s*:\s*\((.*)\)\.groups,.*friendsList\s*:\s*\((.*)\)\.contacts,.*totalCount\s*:\s*\'(\d)\'\s*\*\s*.*/m
+      reg = /.*pageIdx\s*:\s*(\d*).*pageCount\s*:\s*(\d*).*pageSize\s*:\s*(\d*).*groupsList\s*:\s*\((.*)\)\.groups,.*friendsList\s*:\s*\((.*)\)\.contacts,.*totalCount\s*:\s*\'(\d*)\'\s*\*\s*.*/m
       return_hash = {
         status: -1,
         msg: 'system_error'
