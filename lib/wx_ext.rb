@@ -55,6 +55,7 @@ module WxExt
       }
       # {"base_resp"=>{"ret"=>0, "err_msg"=>"ok"}, "redirect_url"=>"/cgi-bin/home?t=home/index&lang=zh_CN&token=1869497342"}
       # {"base_resp":{"ret":-8,"err_msg":"need verify code"}}
+      # {"base_resp":{"ret":-23,"err_msg":"acct\/password error"}}
       # https://mp.weixin.qq.com/cgi-bin/verifycode?username=tuodan@thecampus.cc&r=1415774604450
       res_hash = JSON.parse res.to_s
       if res_hash['base_resp']['ret'].to_s == '0'
@@ -64,6 +65,11 @@ module WxExt
         return_hash = {
           status: -8,
           msg: 'need_varify_code'
+        }
+      elsif res_hash['bash_resp']['ret'].to_s == '-23'
+        return_hash = {
+          status: -23,
+          msg: 'password_error'
         }
       else
         return_hash = {
