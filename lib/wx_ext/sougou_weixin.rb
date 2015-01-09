@@ -5,9 +5,9 @@ require 'json'
 require 'open-uri'
 module WxExt
   class SougouWeixin
-    def self.spider_posts_from_sougou(openid, page_index = 1, date_last = '2000-01-01')
-      url = "http://weixin.sogou.com/gzhjs?openid=#{openid}&page=#{page_index}"
-      res = RestClient.get url, {:accept => :json}
+    def self.spider_posts_from_sougou(openid, page_index = 1, date_last = (Time.now - 3600 * 24 * 10).strftime("%Y-%m-%d"))
+      json_url = "http://weixin.sogou.com/gzhjs?&openid=#{openid}&page=#{page_index}"
+      res = RestClient.get json_url
 
       date_last_arr = date_last.to_s.split('-')
       date_last_to_com = Time.new(date_last_arr[0], date_last_arr[1], date_last_arr[2])
@@ -30,39 +30,44 @@ module WxExt
       end
       spider_posts = []
       xml_articles.each do |xml|
-        doc = Nokogiri::XML(xml.to_s, nil, "UTF-8")
+        doc = Nokogiri::XML(xml, nil, 'UTF-8')
         date = doc.at_xpath('//DOCUMENT/item/display/date').text
-
         spider_post = {}
 
         date_arr = date.to_s.split('-')
         date_to_com = Time.new(date_arr[0], date_arr[1], date_arr[2])
         if date_last_to_com < date_to_com
-          spider_post[:date] = date
-          spider_post[:title] = doc.at_xpath('//DOCUMENT/item/display/title1').text
-          spider_post[:url] = doc.at_xpath('//DOCUMENT/item/display/url').text
-          spider_post[:img] = doc.at_xpath('//DOCUMENT/item/display/imglink').text
-          # logo = doc.at_xpath('//DOCUMENT/item/display/headimage').text
-          # sourcename = doc.at_xpath('//DOCUMENT/item/display/sourcename').text
-          spider_post[:content_short] = doc.at_xpath('//DOCUMENT/item/display/content168').text
+          title = doc.at_xpath('//DOCUMENT/item/display/title1').text
+          url = doc.at_xpath('//DOCUMENT/item/display/url').text
+          img = doc.at_xpath('//DOCUMENT/item/display/imglink').text
+          content_short = doc.at_xpath('//DOCUMENT/item/display/content168').text
 
-          doc_post = Nokogiri::HTML(open(url), nil, "UTF-8")
+          doc_post = Nokogiri::HTML(open(url), nil, 'UTF-8')
           node_author = doc_post.css('div.rich_media_meta_list > em.rich_media_meta.rich_media_meta_text')[1]
-          spider_post[:author] = node_author ? node_author.content : '无'
-          spider_post[:content] = doc_post.css('div.rich_media_content').first.to_s
+          author = node_author ? node_author.content : '无'
+          content = doc_post.css('div#js_content').first.to_s
+          spider_post = {
+            title: title,
+            url: url,
+            img: img,
+            content_short: content_short,
+            author: author,
+            content: content,
+            date: date
+          }
           spider_posts.push spider_post
         else
           break
         end
       end
       {
-          total_items: total_items,
-          total_pages: total_pages,
-          page: page,
-          response_time: response_time,
-          spider_posts: spider_posts,
-          original_count: xml_articles.count,
-          count: spider_posts.count
+        total_items: total_items,
+        total_pages: total_pages,
+        page: page,
+        response_time: response_time,
+        spider_posts: spider_posts,
+        original_count: xml_articles.count,
+        count: spider_posts.count
       }
     end
   end
