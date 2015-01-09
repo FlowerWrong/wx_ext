@@ -38,6 +38,7 @@ module WxExt
         date_arr = date.to_s.split('-')
         date_to_com = Time.new(date_arr[0], date_arr[1], date_arr[2])
         if date_last_to_com < date_to_com
+          spider_post[:date] = date
           spider_post[:title] = doc.at_xpath('//DOCUMENT/item/display/title1').text
           spider_post[:url] = doc.at_xpath('//DOCUMENT/item/display/url').text
           spider_post[:img] = doc.at_xpath('//DOCUMENT/item/display/imglink').text
