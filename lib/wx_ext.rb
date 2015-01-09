@@ -87,7 +87,7 @@ module WxExt
       msg_send_page = RestClient.get msg_send_url, cookies: @cookies
       @cookies = @cookies.merge msg_send_page.cookies
 
-      ticket_reg = /.*ticket\s*:\s*\"(\w+)\".*user_name\s*:\s*\"(\w+)\".*nick_name\s*:\s*\"(.*)\".*/m
+      ticket_reg = /.*ticket\s*:\s*\"(\w+)\".*user_name\s*:\s*\"(.*)\",.*nick_name\s*:\s*\"(.*)\".*/m
       operation_seq_reg = /.*operation_seq\s*:\s*\"(\d+)\".*/
       @operation_seq = $1 if operation_seq_reg =~ msg_send_page.to_s
       if ticket_reg =~ msg_send_page.to_s
