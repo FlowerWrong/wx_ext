@@ -1,5 +1,7 @@
 # encoding: UTF-8
 require 'wx_ext/version'
+require 'wx_ext/sougou_weixin'
+
 require 'digest'
 require 'rest_client'
 require 'json'

@@ -7,7 +7,7 @@
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'wx_ext', '~> 0.1.0'
+gem 'wx_ext', '~> 0.1.1'
 ```
 
 And then execute:
@@ -22,6 +22,7 @@ And then execute:
 
 1. 修改 spec/wx_ext/weixin_spec.rb 文件中的账户密码
 2. rspec spec/wx_ext/weixin_spec.rb
+3. rspec spec/wx_ext/sougou_weixin_spec.rb
 
 ## Contributing
 

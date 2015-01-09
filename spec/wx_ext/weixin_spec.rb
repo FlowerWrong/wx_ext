@@ -3,8 +3,9 @@ require 'spec_helper'
 
 describe WxExt::WeiXin do
   before(:all) do
-    @weixin = WxExt::WeiXin.new 'flowerwrong@hotmail.com', '1*flower@wrong*1'
+    @weixin = WxExt::WeiXin.new 'username', 'pass'
   end
+
 =begin
   it 'should login to the mp' do
     res_hash = @weixin.login
@@ -86,7 +87,7 @@ describe WxExt::WeiXin do
       expect(star_res_hash['ret'].to_s).to eql('0')
     end
   end
-=end
+
 
   it 'should get fans count' do
     res_hash = @weixin.login
@@ -112,7 +113,8 @@ describe WxExt::WeiXin do
       puts 'init failed'
     end
   end
-=begin
+
+
   it "should get new msg num" do
     res_hash = @weixin.login
     flag = @weixin.init
