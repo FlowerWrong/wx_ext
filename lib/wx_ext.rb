@@ -58,20 +58,27 @@ module WxExt
       # {"base_resp"=>{"ret"=>0, "err_msg"=>"ok"}, "redirect_url"=>"/cgi-bin/home?t=home/index&lang=zh_CN&token=1869497342"}
       # {"base_resp":{"ret":-8,"err_msg":"need verify code"}}
       # {"base_resp":{"ret":-23,"err_msg":"acct\/password error"}}
+      # {"base_resp":{"ret":-21,"err_msg":"user not exist"}}
       # https://mp.weixin.qq.com/cgi-bin/verifycode?username=tuodan@thecampus.cc&r=1415774604450
       res_hash = JSON.parse res.to_s
-      if res_hash['base_resp']['ret'].to_s == '0'
+      sta = res_hash['base_resp']['ret'].to_s
+      if sta == '0'
         token_reg = /.*token=(\d+)\".*/
         @token = $1 if token_reg =~ res.to_s
-      elsif res_hash['bash_resp']['ret'].to_s == '-8'
+      elsif sta == '-8'
         return_hash = {
           status: -8,
           msg: 'need_varify_code'
         }
-      elsif res_hash['bash_resp']['ret'].to_s == '-23'
+      elsif sta == '-23'
         return_hash = {
           status: -23,
           msg: 'password_error'
+        }
+      elsif sta == '-21'
+        return_hash = {
+            status: -21,
+            msg: 'user_not_exist'
         }
       else
         return_hash = {

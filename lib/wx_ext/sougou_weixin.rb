@@ -70,5 +70,24 @@ module WxExt
         count: spider_posts.count
       }
     end
+
+    def self.spider_posts_later_date(openid, date_last = (Time.now - 3600 * 24 * 10).strftime("%Y-%m-%d"))
+      spider_posts_first_page_hash = spider_posts_from_sougou(openid, 1, date_last)
+      total_pages = spider_posts_first_page_hash[:total_pages].to_i
+      spider_posts = []
+      1.upto(total_pages).each do |page_index|
+        spider_posts_hash = spider_posts_from_sougou(openid, page_index, date_last)
+        if spider_posts_hash[:original_count] == spider_posts_hash[:count]
+          spider_posts += spider_posts_hash[:spider_posts]
+        else
+          break
+        end
+      end
+      {
+          total_items: spider_posts_first_page_hash[:total_items],
+          total_pages: total_pages,
+          spider_posts: spider_posts.uniq
+      }
+    end
   end
 end
