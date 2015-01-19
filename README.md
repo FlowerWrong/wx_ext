@@ -24,6 +24,10 @@ And then execute:
 2. rspec spec/wx_ext/weixin_spec.rb
 3. rspec spec/wx_ext/sougou_weixin_spec.rb
 
+## yard
+
+`yardoc lib/*.rb lib/wx_ext/*.rb lib/wx_ext/api/*.rb lib/wx_ext/api/user/*.rb`
+
 ## Contributing
 
 1. Fork it ( https://github.com/FlowerWrong/wx_ext/fork )

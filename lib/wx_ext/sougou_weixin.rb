@@ -6,9 +6,16 @@ require 'json'
 require 'open-uri'
 
 module WxExt
-  #  微信扩展接口, 从搜狗微信抓取微信文章
+  # Spider post from http://weixin.sogou.com
+  #
   # @author FuShengYang
   class SougouWeixin
+    # Spider posts from sougou, only one page.
+    #
+    # @param [Enumerable<String>] openid
+    # @param [Integer] page_index
+    # @param [Enumerable<String>] date_last
+    # @return [Hash] A spider posts hash with total_pages etc.
     def self.spider_posts_from_sougou(openid, page_index = 1, date_last = (Time.now - 3600 * 24 * 10).strftime("%Y-%m-%d"))
       json_url = "http://weixin.sogou.com/gzhjs?&openid=#{openid}&page=#{page_index}"
       res = RestClient.get json_url
@@ -75,6 +82,11 @@ module WxExt
       }
     end
 
+    # Spider posts from sougou, last date.
+    #
+    # @param [Enumerable<String>] openid
+    # @param [Enumerable<String>] date_last
+    # @return [Hash] A spider posts hash with total_pages etc.
     def self.spider_posts_later_date(openid, date_last = (Time.now - 3600 * 24 * 10).strftime("%Y-%m-%d"))
       spider_posts_first_page_hash = spider_posts_from_sougou(openid, 1, date_last)
       total_pages = spider_posts_first_page_hash[:total_pages].to_i
@@ -88,9 +100,9 @@ module WxExt
         end
       end
       {
-          total_items: spider_posts_first_page_hash[:total_items],
-          total_pages: total_pages,
-          spider_posts: spider_posts.uniq
+        total_items: spider_posts_first_page_hash[:total_items],
+        total_pages: total_pages,
+        spider_posts: spider_posts.uniq
       }
     end
   end

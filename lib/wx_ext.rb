@@ -5,17 +5,30 @@ require 'wx_ext/sougou_weixin'
 require 'wx_ext/wei_xin'
 require 'wx_ext/api'
 
-# 微信扩展接口和基本接口
+# Weixin extention, sougou spider and weixin api.
+#
 # @author FuShengYang
 module WxExt
+
+  # Return the root path of this gem.
+  #
+  # @return [String] Path of the gem's root.
   def self.root
     File.dirname __dir__
   end
 
+
+  # Return the lib path of this gem.
+  #
+  # @return [String] Path of the gem's lib.
   def self.lib
     File.join root, 'lib'
   end
 
+
+  # Return the spec path of this gem.
+  #
+  # @return [String] Path of the gem's spec.
   def self.spec
     File.join root, 'spec'
   end

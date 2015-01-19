@@ -1,37 +1,42 @@
 # encoding: UTF-8
 
-require 'digest'
 require 'rest_client'
-require 'json'
-require 'wx_ext/helper'
 
 module WxExt
+  # Weixin api
+  #
+  # @author FuShengYang
   module Api
-
-    # 微信扩展接口, 模拟登陆微信公众平台
+    # User api of weixin.
+    #
     # @author FuShengYang
     module Base
       class << self
-        # Get the access_token for other apis.
-        # http://mp.weixin.qq.com/wiki/11/0e4b294685f817b95cbed85ba5e82b8f.html
+        # Get the access_token for other apis via get.
         #
-        # @param [String] appid
-        # @param [String] secret
-        # @param [String] grant_type, default is 'client_credential'
-        # @return [Hash] {"access_token":"ACCESS_TOKEN","expires_in":7200}
+        # @param [Enumerable<String>] appid
+        # @param [Enumerable<String>] secret
+        # @param [Enumerable<String>] grant_type
+        # @return [Hash] "access_token":"ACCESS_TOKEN","expires_in":7200
         def get_access_token(appid, secret, grant_type = 'client_credential')
           url = 'https://api.weixin.qq.com/cgi-bin/token'\
                 "?grant_type=#{grant_type}&appid=#{appid}&secret=#{secret}"
           Helper.http_get(url, { accept: :json })
         end
 
-        # { "ip_list":["127.0.0.1","127.0.0.1"] }
+        # Get weixin server ips.
+        #
+        # @param [Enumerable<String>] access_token
+        # @return [Hash] A json parse hash.
         def get_weixin_ips(access_token)
           url = 'https://api.weixin.qq.com/cgi-bin/getcallbackip'\
                 "?access_token=#{access_token}"
           Helper.http_get(url, { accept: :json })
         end
 
+        # Get weixin error_code and msg map.
+        #
+        # @return [Hash] A json parse hash.
         def code_msg
           {
             -1 => '系统繁忙，此时请开发者稍候再试',
@@ -130,18 +135,22 @@ module WxExt
         end
 
         # Upload media to weixin.
-        # http://mp.weixin.qq.com/wiki/10/78b15308b053286e2a66b33f0f0f5fb6.html
         #
-        # @param [String] access_token
-        # @param [String] type, 媒体文件类型，分别有图片（image）、语音（voice）、视频（video）和缩略图（thumb）
-        # @param [String] media, form-data中媒体文件标识，有filename、filelength、content-type等信息
-        # @return [Hash] {"type":"TYPE","media_id":"MEDIA_ID","created_at":123456789}
+        # @param [Enumerable<String>] access_token
+        # @param [Enumerable<String>] type 媒体文件类型，分别有图片（image）、语音（voice）、视频（video）和缩略图（thumb）
+        # @param [File] media form-data中媒体文件标识，有filename、filelength、content-type等信息
+        # @return [Hash] "type":"TYPE","media_id":"MEDIA_ID","created_at":123456789
         def upload_media(access_token, type, media)
           url = 'http://file.api.weixin.qq.com/cgi-bin/media/upload'\
                 "?access_token=#{access_token}&type=#{type}"
           Helper.http_post(url, {file: media})
         end
 
+        # Download media from weixin.
+        #
+        # @param [Enumerable<String>] access_token
+        # @param [Enumerable<String>] media_id
+        # @return [Image] Download img.
         def download_media(access_token, media_id)
           url = 'http://file.api.weixin.qq.com/cgi-bin/media/get'\
                 "?access_token=#{access_token}&media_id=#{media_id}"
