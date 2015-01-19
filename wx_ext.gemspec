@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = WxExt::VERSION
   spec.authors       = ['flowerwrong']
   spec.email         = ['sysuyangkang@gmail.com']
-  spec.summary       = %q{a gem to hack mp.weixin.qq.com}
-  spec.description   = %q{a gem to hack mp.weixin.qq.com}
+  spec.summary       = %q{A gem to hack mp.weixin.qq.com and weixin base api.}
+  spec.description   = %q{This gem provide hack mp.weixin.qq.com and weixin open api.}
   spec.homepage      = 'http://thecampus.cc'
   spec.license       = 'MIT'
 
@@ -20,8 +20,9 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'bundler', '~> 1.7'
   spec.add_development_dependency 'rake', '~> 10.0'
+  spec.add_development_dependency 'yard', '~> 0.8'
+  spec.add_development_dependency 'rspec', '~> 3.1'
 
-  spec.add_development_dependency 'rspec'
-  spec.add_dependency 'rest_client'
-  spec.add_dependency 'nokogiri'
+  spec.add_dependency 'rest_client', '~> 1.8'
+  spec.add_dependency 'nokogiri', '~> 1.6'
 end

@@ -1,9 +1,13 @@
 # encoding: UTF-8
+
 require 'nokogiri'
 require 'rest_client'
 require 'json'
 require 'open-uri'
+
 module WxExt
+  #  微信扩展接口, 从搜狗微信抓取微信文章
+  # @author FuShengYang
   class SougouWeixin
     def self.spider_posts_from_sougou(openid, page_index = 1, date_last = (Time.now - 3600 * 24 * 10).strftime("%Y-%m-%d"))
       json_url = "http://weixin.sogou.com/gzhjs?&openid=#{openid}&page=#{page_index}"

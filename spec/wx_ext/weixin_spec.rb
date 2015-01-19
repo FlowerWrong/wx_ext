@@ -3,15 +3,15 @@ require 'spec_helper'
 
 describe WxExt::WeiXin do
   before(:all) do
-    @weixin = WxExt::WeiXin.new 'username', 'pass'
+    @weixin = WxExt::WeiXin.new 'flowerwrong@hotmail.com', '1*flower@wrong*1'
   end
 
-=begin
+
   it 'should login to the mp' do
     res_hash = @weixin.login
     expect(res_hash[:status]).to eql(0)
   end
-
+=begin
   it 'should init method should init all params' do
     res_hash = @weixin.login
     flag = @weixin.init
