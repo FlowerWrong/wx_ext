@@ -1,6 +1,7 @@
 # encoding: UTF-8
 
 require 'digest'
+require 'wx_ext/helper'
 
 module WxExt
   # Weixin api

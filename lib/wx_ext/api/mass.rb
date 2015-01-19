@@ -1,5 +1,7 @@
 # encoding: UTF-8
 
+require 'wx_ext/helper'
+
 module WxExt
   # Weixin api
   #

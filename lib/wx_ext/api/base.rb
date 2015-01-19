@@ -1,6 +1,7 @@
 # encoding: UTF-8
 
 require 'rest_client'
+require 'wx_ext/helper'
 
 module WxExt
   # Weixin api

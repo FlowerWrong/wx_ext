@@ -1,5 +1,7 @@
 # encoding: UTF-8
 
+require 'wx_ext/helper'
+
 module WxExt
   # Weixin api
   #
@@ -40,7 +42,7 @@ module WxExt
         # @param [Enumerable<String>] access_token
         # @param [Enumerable<String>] next_openid
         # @return [Hash] Json based hash.
-        def user_list(access_token, next_openid)
+        def user_list(access_token, next_openid=nil)
           url = 'https://api.weixin.qq.com/cgi-bin/user/get'\
                 "?access_token=#{access_token}"
           url += "&next_openid=#{next_openid}" if next_openid
