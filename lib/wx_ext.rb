@@ -3,6 +3,7 @@
 require 'wx_ext/version'
 require 'wx_ext/sougou_weixin'
 require 'wx_ext/wei_xin'
+require 'wx_ext/api'
 
 # 微信扩展接口和基本接口
 # @author FuShengYang

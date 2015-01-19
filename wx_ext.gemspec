@@ -23,6 +23,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'yard', '~> 0.8'
   spec.add_development_dependency 'rspec', '~> 3.1'
 
-  spec.add_dependency 'rest_client', '~> 1.8'
+  spec.add_dependency 'rest-client', '~> 1.7'
   spec.add_dependency 'nokogiri', '~> 1.6'
 end
