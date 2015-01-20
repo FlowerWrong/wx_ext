@@ -1,6 +1,6 @@
 # WxExt
 
-微信接口之外的扩展gem
+Weixin extention, sougou weixin post spider and weixin api gem
 
 ## Installation
 
@@ -16,15 +16,15 @@ And then execute:
 
 ## Usage
 
-使用请看spec/wx_ext/
+See spec/wx_ext/
 
-## 测试
+## Test
 
-1. 修改 spec/wx_ext/weixin_spec.rb 文件中的账户密码
-2. rspec spec/wx_ext/weixin_spec.rb
-3. rspec spec/wx_ext/sougou_weixin_spec.rb
+1. Change `spec/wx_ext/weixin_spec.rb` file username and pass
+2. `rspec spec/wx_ext/weixin_spec.rb`
+3. `rspec spec/wx_ext/sougou_weixin_spec.rb`
 
-## yard
+## Yard
 
 `yardoc lib/*.rb lib/wx_ext/*.rb lib/wx_ext/api/*.rb lib/wx_ext/api/user/*.rb`
 
