@@ -9,6 +9,7 @@ require 'wx_ext/api'
 #
 # @author FuShengYang
 module WxExt
+  module_function
 
   # Return the root path of this gem.
   #
@@ -32,6 +33,4 @@ module WxExt
   def spec
     File.join root, 'spec'
   end
-
-  extend self
 end
