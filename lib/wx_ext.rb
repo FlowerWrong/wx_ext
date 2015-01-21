@@ -18,14 +18,12 @@ module WxExt
     File.dirname __dir__
   end
 
-
   # Return the lib path of this gem.
   #
   # @return [String] Path of the gem's lib.
   def lib
     File.join root, 'lib'
   end
-
 
   # Return the spec path of this gem.
   #
