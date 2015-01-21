@@ -11,15 +11,15 @@ module WxExt
     #
     # @author FuShengYang
     module Msg
-      class << self
-        # Check the signature before send msg.
-        #
-        # @return [Boolean] Check the signature true or false.
-        def check_signature(signature, timestamp, nonce, token)
-          array = [token, timestamp, nonce].sort
-          signature == Digest::SHA1.hexdigest(array.join) ? true : false
-        end
+      # Check the signature before send msg.
+      #
+      # @return [Boolean] Check the signature true or false.
+      def check_signature(signature, timestamp, nonce, token)
+        array = [token, timestamp, nonce].sort
+        signature == Digest::SHA1.hexdigest(array.join) ? true : false
       end
+
+      extend self
     end
   end
 end

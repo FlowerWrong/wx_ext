@@ -11,19 +11,18 @@ module WxExt
     #
     # @author FuShengYang
     module Semantic
-      class << self
-
-        # Create semantic search via post.
-        #
-        # @param [Enumerable<String>] access_token
-        # @param [Hash] semantic_hash
-        # @return [Hash] Json based hash.
-        def semantic_search(access_token, semantic_hash)
-          url = 'https://api.weixin.qq.com/semantic/semproxy/search'\
-                "?access_token=#{access_token}"
-          Helper.http_post(url, semantic_hash.to_json)
-        end
+      # Create semantic search via post.
+      #
+      # @param [Enumerable<String>] access_token
+      # @param [Hash] semantic_hash
+      # @return [Hash] Json based hash.
+      def semantic_search(access_token, semantic_hash)
+        url = 'https://api.weixin.qq.com/semantic/semproxy/search'\
+              "?access_token=#{access_token}"
+        Helper.http_post(url, semantic_hash.to_json)
       end
+
+      extend self
     end
   end
 end

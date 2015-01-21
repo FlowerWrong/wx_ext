@@ -13,7 +13,7 @@ module WxExt
   # Return the root path of this gem.
   #
   # @return [String] Path of the gem's root.
-  def self.root
+  def root
     File.dirname __dir__
   end
 
@@ -21,7 +21,7 @@ module WxExt
   # Return the lib path of this gem.
   #
   # @return [String] Path of the gem's lib.
-  def self.lib
+  def lib
     File.join root, 'lib'
   end
 
@@ -29,7 +29,9 @@ module WxExt
   # Return the spec path of this gem.
   #
   # @return [String] Path of the gem's spec.
-  def self.spec
+  def spec
     File.join root, 'spec'
   end
+
+  extend self
 end
