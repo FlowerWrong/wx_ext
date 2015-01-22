@@ -40,7 +40,10 @@ module WxExt
             app_id: app_id,
             timestamp: timestamp,
             noncestr: noncestr,
-            signature: signature
+            signature: signature,
+            jsapi_ticket: jsapi_ticket,
+            url: url,
+            str: str
           }
         end
         config_hash
