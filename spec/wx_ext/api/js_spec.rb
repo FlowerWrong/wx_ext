@@ -14,7 +14,8 @@ describe WxExt::Api::Js do
   end
 
   it 'should get js config' do
-    config_hash = WxExt::Api::Js.get_jsapi_config(@access_token, 'url', @app_id)
+    jsapi_ticket_hash = WxExt::Api::Js.get_jsapi_ticket(@access_token)
+    config_hash = WxExt::Api::Js.get_jsapi_config(@access_token, 'url', @app_id, jsapi_ticket_hash['ticket'])
     puts config_hash
     expect(config_hash[:app_id]).to eql(@app_id)
   end
