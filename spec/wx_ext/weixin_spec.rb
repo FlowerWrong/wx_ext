@@ -7,11 +7,23 @@ describe WxExt::WeiXin do
   end
 
 
+	it 'should search msg with keyword' do
+    res_hash = @weixin.login
+		flag = @weixin.init
+		puts flag
+		if flag
+			require 'uri'
+      ha = @weixin.get_msg_items(20, 7, 1, 'search', URI.encode('呢'), '', '')
+		  puts '-' * 20
+			puts ha
+		end
+	end
+=begin
   it 'should login to the mp' do
     res_hash = @weixin.login
     expect(res_hash[:status]).to eql(0)
   end
-=begin
+
   it 'should init method should init all params' do
     res_hash = @weixin.login
     flag = @weixin.init
