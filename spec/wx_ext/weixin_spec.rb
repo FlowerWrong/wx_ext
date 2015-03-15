@@ -3,34 +3,39 @@ require 'spec_helper'
 
 describe WxExt::WeiXin do
   before(:all) do
-    @weixin = WxExt::WeiXin.new 'username', 'pass'
+    @weixin = WxExt::WeiXin.new 'flowerwrong@hotmail.com', '1*flower@wrong*1'
   end
 
 
-	it 'should search msg with keyword' do
-    res_hash = @weixin.login
-		flag = @weixin.init
-		puts flag
-		if flag
-			require 'uri'
-      ha = @weixin.get_msg_items(20, 7, 1, 'search', URI.encode('呢'), '', '')
-		  puts '-' * 20
-			puts ha
-		end
-	end
-=begin
+
   it 'should login to the mp' do
     res_hash = @weixin.login
+    puts res_hash
     expect(res_hash[:status]).to eql(0)
   end
 
   it 'should init method should init all params' do
     res_hash = @weixin.login
+    puts res_hash
     flag = @weixin.init
+    puts flag
     if flag
       token = @weixin.token
       puts "token = #{token}"
       expect(token).to match(/\d+/)
+    end
+  end
+
+=begin
+  it 'should search msg with keyword' do
+    res_hash = @weixin.login
+    flag = @weixin.init
+    puts flag
+    if flag
+      require 'uri'
+      ha = @weixin.get_msg_items(20, 7, 1, 'search', URI.encode('呢'), '', '')
+      puts '-' * 20
+      puts ha
     end
   end
 
