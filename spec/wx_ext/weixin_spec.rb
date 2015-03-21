@@ -6,8 +6,6 @@ describe WxExt::WeiXin do
     @weixin = WxExt::WeiXin.new 'flowerwrong@hotmail.com', '1*flower@wrong*1'
   end
 
-
-
   it 'should login to the mp' do
     res_hash = @weixin.login
     puts res_hash
@@ -23,6 +21,8 @@ describe WxExt::WeiXin do
       token = @weixin.token
       puts "token = #{token}"
       expect(token).to match(/\d+/)
+		else
+			expect(flag).to eql(true)
     end
   end
 
