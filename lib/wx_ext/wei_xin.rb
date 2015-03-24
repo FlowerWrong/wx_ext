@@ -4,6 +4,7 @@ require 'digest'
 require 'rest_client'
 require 'json'
 require 'nokogiri'
+require 'uri'
 
 module WxExt
   # weixin extention of mp.weixin.qq.com
@@ -85,25 +86,39 @@ module WxExt
     #
     # @return [Boolean] Init ticket, cookies, operation_seq, user_name true or false.
     def init
-      p @cookies
       home_url = "https://mp.weixin.qq.com/cgi-bin/home?t=home/index&lang=zh_CN&token=#{@token}"
       headers = {
         host: 'mp.weixin.qq.com',
         referer: 'https://mp.weixin.qq.com/'
       }
+
+      @cookies = {
+        data_bizuin: URI.unescape(cookies['data_bizuin']),
+        data_ticket: URI.unescape(cookies['data_ticket']),
+        slave_user: URI.unescape(cookies['slave_user']),
+        slave_sid: URI.unescape(cookies['slave_sid']),
+        bizuin: URI.unescape(cookies['bizuin'])
+      }
+
       cookie_page = RestClient.get home_url, cookies: @cookies, headers: headers
       @cookies = cookie_page.cookies
-      p '-' * 20
-      p @cookies
+
+      @cookies = {
+        slave_user: URI.unescape(cookies['slave_user']),
+        slave_sid: URI.unescape(cookies['slave_sid']),
+        bizuin: URI.unescape(cookies['bizuin'])
+      }
 
       msg_send_url = 'https://mp.weixin.qq.com/cgi-bin/masssendpage'\
                      "?t=mass/send&token=#{@token}&lang=zh_CN"
       msg_send_page = RestClient.get msg_send_url, cookies: @cookies
       @cookies = msg_send_page.cookies
-			p '-' * 20
-			p @cookies
-			p @token
-			p msg_send_page.to_s
+
+      @cookies = {
+        slave_user: URI.unescape(cookies['slave_user']),
+        slave_sid: URI.unescape(cookies['slave_sid']),
+        bizuin: URI.unescape(cookies['bizuin'])
+      }
 
       ticket_reg = /.*ticket\s*:\s*\"(\w+)\".*user_name\s*:\s*\"(.*)\",.*nick_name\s*:\s*\"(.*)\".*/m
       operation_seq_reg = /.*operation_seq\s*:\s*\"(\d+)\".*/
@@ -443,6 +458,24 @@ module WxExt
                                                      cookies: @cookies)
       res = resource[uri].post params
       JSON.parse res.to_s
+    end
+
+    private
+
+    def decode_cookies(cookies)
+      need_decode = [
+        'data_bizuin',
+        'data_ticket',
+        'slave_user',
+        'slave_sid',
+        'bizuin'
+      ]
+      cookies.each do |key, val|
+        if need_decode.include?(key)
+          cookies[key] = URI.unescape(cookies[val])
+        end
+      end
+      cookies
     end
   end
 end

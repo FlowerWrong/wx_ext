@@ -8,18 +8,14 @@ describe WxExt::WeiXin do
 
   it 'should login to the mp' do
     res_hash = @weixin.login
-    puts res_hash
     expect(res_hash[:status]).to eql(0)
   end
 
   it 'should init method should init all params' do
     res_hash = @weixin.login
-    puts res_hash
     flag = @weixin.init
-    puts flag
     if flag
       token = @weixin.token
-      puts "token = #{token}"
       expect(token).to match(/\d+/)
 		else
 			expect(flag).to eql(true)
