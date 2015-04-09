@@ -56,7 +56,7 @@ module WxExt
       # @return [Hash] Json based hash.
       def get_oauth2_token_with_code(app_id, app_secret, code, grant_type='authorization_code')
         url = 'https://api.weixin.qq.com/sns/oauth2/access_token'\
-              "?appid=#{app_id}&secret=#{app_secret}&code=CODE&grant_type=#{grant_type}"
+              "?appid=#{app_id}&secret=#{app_secret}&code=#{code}&grant_type=#{grant_type}"
         Helper.http_get(url, { accept: :json })
       end
 
