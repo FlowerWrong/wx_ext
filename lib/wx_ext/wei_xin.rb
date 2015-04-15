@@ -100,25 +100,9 @@ module WxExt
         bizuin: URI.unescape(cookies['bizuin'])
       }
 
-      cookie_page = RestClient.get home_url, cookies: @cookies, headers: headers
-      @cookies = cookie_page.cookies
-
-      @cookies = {
-        slave_user: URI.unescape(cookies['slave_user']),
-        slave_sid: URI.unescape(cookies['slave_sid']),
-        bizuin: URI.unescape(cookies['bizuin'])
-      }
-
       msg_send_url = 'https://mp.weixin.qq.com/cgi-bin/masssendpage'\
                      "?t=mass/send&token=#{@token}&lang=zh_CN"
       msg_send_page = RestClient.get msg_send_url, cookies: @cookies
-      @cookies = msg_send_page.cookies
-
-      @cookies = {
-        slave_user: URI.unescape(cookies['slave_user']),
-        slave_sid: URI.unescape(cookies['slave_sid']),
-        bizuin: URI.unescape(cookies['bizuin'])
-      }
 
       ticket_reg = /.*ticket\s*:\s*\"(\w+)\".*user_name\s*:\s*\"(.*)\",.*nick_name\s*:\s*\"(.*)\".*/m
       operation_seq_reg = /.*operation_seq\s*:\s*\"(\d+)\".*/
@@ -162,8 +146,7 @@ module WxExt
                  '&action=edit&type=10&isMul=0&isNew=1&lang=zh_CN'\
                  "&token=#{@token}"
       }
-      resource = RestClient::Resource.new(@home_url, headers: headers,
-      cookies: @cookies)
+      resource = RestClient::Resource.new(@home_url, headers: headers, cookies: @cookies)
       res = resource[post_single_msg_uri].post single_msg_params
       JSON.parse res.to_s
     end
@@ -180,25 +163,26 @@ module WxExt
         '?t=media/appmsg_edit&action=edit&type=10'\
         "&isMul=1&isNew=1&lang=zh_CN&token=#{@token}"
       }
-      resource = RestClient::Resource.new(@home_url, headers: headers,
-      cookies: @cookies)
+      resource = RestClient::Resource.new(@home_url, headers: headers, cookies: @cookies)
       post_msg_res = resource[uri].post msg_params
       JSON.parse post_msg_res.to_s
     end
 
     # Preview broadcast news to user.
+    # system error: no data_bizuin and data_ticket in cookie
     #
     # @param [Hash] msg_params_with_name
     # @return [Hash] A json parse hash.
     def preview_msg(msg_params_with_name)
       uri = 'cgi-bin/operate_appmsg?sub=preview&t=ajax-appmsg-preview'\
-      "&type=10&token=#{@token}&lang=zh_CN"
+            "&type=10&token=#{@token}&lang=zh_CN"
       headers = {
         referer: 'https://mp.weixin.qq.com/cgi-bin/appmsg?t=media/appmsg_edit'\
-        "&action=edit&type=10&isMul=0&isNew=1&lang=zh_CN&token=#{@token}"
+                 "&action=edit&type=10&isMul=0&isNew=1&lang=zh_CN&token=#{@token}",
+        host: 'mp.weixin.qq.com',
+        x_requested_with: 'XMLHttpRequest'
       }
-      resource = RestClient::Resource.new(@home_url, headers: headers,
-      cookies: @cookies)
+      resource = RestClient::Resource.new(@home_url, headers: headers, cookies: @cookies)
 
       res = resource[uri].post msg_params_with_name
       # "ret":"0", "msg":"preview send success!", "appMsgId":"201796045", "fakeid":""

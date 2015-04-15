@@ -22,7 +22,6 @@ describe WxExt::WeiXin do
     end
   end
 
-=begin
   it 'should search msg with keyword' do
     res_hash = @weixin.login
     flag = @weixin.init
@@ -45,28 +44,30 @@ describe WxExt::WeiXin do
       AppMsgId: '',
       ajax: 1,
       author0: '作者' + rand.to_s,
+      can_reward0: 0,
       content0: '正文' + rand.to_s,
+      copyright_type0: 0,
       count: 1,
       digest0: 'test摘要' + rand.to_s,
       f: 'json',
       fileid0: file_id,
+      imgcode: '',
       lang: 'zh_CN',
       preusername: 'nan474947',
       random: rand,
-      show_cover_pic0: 1, # 0 => 封面图片不显示在正文中
+      reward_wording0: '',
+      shortvideofileid0: '',
+      show_cover_pic0: 1,  # 0 => 封面图片不显示在正文中
       sourceurl0: 'http://thecampus.cc/' + rand.to_s,
       title0: 'test标题' + rand.to_s,
       token: @weixin.token,
       vid: ''
     }
-
     msg_hash = @weixin.preview_msg(msg_params_with_name)
-    puts "==" * 20
-    puts msg_hash
     expect(msg_hash["ret"].to_s).to eql("0")
   end
 
-
+=begin
   it 'should reply to yang' do
     res_hash = @weixin.login
     flag = @weixin.init
@@ -77,7 +78,6 @@ describe WxExt::WeiXin do
       expect(quick_reply_res_hash['base_resp']['ret'].to_s).to eql('0')
     end
   end
-
 
   it 'should star msg' do
     res_hash = @weixin.login
@@ -100,7 +100,7 @@ describe WxExt::WeiXin do
       expect(star_res_hash['ret'].to_s).to eql('0')
     end
   end
-
+=end
 
   it 'should get fans count' do
     res_hash = @weixin.login
@@ -114,7 +114,6 @@ describe WxExt::WeiXin do
   end
 
   it 'should get total_count, count, day, frommsgid, can_search_msg, offset, action=search, keyword, last_msg_id, filterivrmsg=0/1 和 msg_items' do
-
     res_hash = @weixin.login
     flag = @weixin.init
     if flag
@@ -127,11 +126,10 @@ describe WxExt::WeiXin do
     end
   end
 
-
   it "should get new msg num" do
     res_hash = @weixin.login
     flag = @weixin.init
-    msg_res_hash = @weixin.get_msg_item if flag
+    msg_res_hash = @weixin.get_msg_items if flag
     res_hash = @weixin.get_new_msg_num(msg_res_hash[:latest_msg_id=])
     puts '==' * 20
     puts res_hash
@@ -241,6 +239,7 @@ describe WxExt::WeiXin do
     expect(msg_hash["ret"].to_s).to eql("0")
   end
 
+=begin
   it "should broadcast msg to all user" do
     res_hash = @weixin.login
     flag = @weixin.init
@@ -273,6 +272,7 @@ describe WxExt::WeiXin do
     puts msg_hash
     expect(msg_hash["ret"].to_s).to eql("0")
   end
+=end
 
   it 'should get app msg list with json' do
     res_hash = @weixin.login
@@ -283,5 +283,4 @@ describe WxExt::WeiXin do
     puts msg_hash["app_msg_info"]["item"][0]["app_id"]
     expect(msg_hash["base_resp"]["ret"].to_s).to eql("0")
   end
-=end
 end
