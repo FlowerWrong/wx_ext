@@ -80,7 +80,7 @@ module WxExt
       # @return [Hash] Json based hash.
       def get_user_info_with_snsapi_userinfo(oauth2_token, openid, lang)
         url = 'https://api.weixin.qq.com/sns/userinfo'\
-              "?access_token=#{oauth2_token}&#{openid}=OPENID&lang=#{lang}"
+              "?access_token=#{oauth2_token}&openid=#{openid}&lang=#{lang}"
         Helper.http_get(url, { accept: :json })
       end
 
