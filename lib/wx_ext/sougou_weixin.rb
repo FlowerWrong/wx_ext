@@ -11,6 +11,8 @@ module WxExt
   # @author FuShengYang
   class SougouWeixin
     # Spider posts from sougou, only one page.
+    # curl 'http://weixin.sogou.com/gzhjs?&openid=oIWsFt4AIyhWhM2kZXI86sLjzXCU&page=1' -H 'Host: weixin.sogou.com' -H 'Cookie: SNUID=C1B6DDC8E6E3F1B584C821B5E6528CAD; SUV=1428050203531472;'
+    # 爬虫问题已经定位到本地和服务器同一套代码结果不同(猜测是跑了25次左右被搜狗禁用了ip)
     #
     # @param [Enumerable<String>] openid
     # @param [Integer] page_index
