@@ -4,6 +4,7 @@ require 'nokogiri'
 require 'rest_client'
 require 'json'
 require 'open-uri'
+require 'time'
 
 module WxExt
   # Spider post from http://weixin.sogou.com
@@ -21,6 +22,13 @@ module WxExt
     def self.spider_posts_from_sougou(openid, page_index = 1, date_last = (Time.now - 3600 * 24 * 10).strftime("%Y-%m-%d"))
       json_url = "http://weixin.sogou.com/gzhjs?&openid=#{openid}&page=#{page_index}"
       res = RestClient.get json_url
+
+      reg_resent = /.*SNUID=(.*);\spath.*/m
+      if reg_resent =~ res.to_s
+        suv = Time.now.to_i * 1000000 + (rand * 1000).round
+        snuid = $1
+        res = RestClient.get json_url, :Cookie => "SNUID=#{snuid}; SUV=#{suv};"
+      end
 
       date_last_arr = date_last.to_s.split('-')
       date_last_to_com = Time.new(date_last_arr[0], date_last_arr[1], date_last_arr[2])
