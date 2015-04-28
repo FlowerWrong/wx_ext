@@ -7,7 +7,7 @@ Weixin extention, sougou weixin post spider and weixin api gem
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'wx_ext', '~> 0.2.7'
+gem 'wx_ext', '~> 0.2.8'
 ```
 
 And then execute:

@@ -13,7 +13,6 @@ module WxExt
   class SougouWeixin
     # Spider posts from sougou, only one page.
     # curl 'http://weixin.sogou.com/gzhjs?&openid=oIWsFt4AIyhWhM2kZXI86sLjzXCU&page=1' -H 'Host: weixin.sogou.com' -H 'Cookie: SNUID=C1B6DDC8E6E3F1B584C821B5E6528CAD; SUV=1428050203531472;'
-    # 爬虫问题已经定位到本地和服务器同一套代码结果不同(猜测是跑了25次左右被搜狗禁用了ip)
     #
     # @param [Enumerable<String>] openid
     # @param [Integer] page_index
@@ -23,14 +22,18 @@ module WxExt
       json_url = "http://weixin.sogou.com/gzhjs?&openid=#{openid}&page=#{page_index}"
       res = RestClient.get json_url
 
+      if ! res.valid_encoding?
+        res = res.scrub!('?')
+      end
+
       reg_resent = /.*SNUID=(.*);\spath.*/m
-      if reg_resent =~ res.to_s
+      if reg_resent =~ res
         suv = Time.now.to_i * 1000000 + (rand * 1000).round
         snuid = $1
         res = RestClient.get json_url, :Cookie => "SNUID=#{snuid}; SUV=#{suv};"
       end
 
-      date_last_arr = date_last.to_s.split('-')
+      date_last_arr = date_last.split('-')
       date_last_to_com = Time.new(date_last_arr[0], date_last_arr[1], date_last_arr[2])
 
       xml_articles = nil
