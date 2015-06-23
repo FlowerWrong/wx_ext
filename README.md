@@ -2,6 +2,10 @@
 
 Weixin extention, sougou weixin post spider and weixin api gem
 
+## Dependency
+
+phantomjs
+
 ## Installation
 
 Add this line to your application's Gemfile:

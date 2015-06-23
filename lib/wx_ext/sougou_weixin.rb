@@ -12,14 +12,14 @@ module WxExt
   # @author FuShengYang
   class SougouWeixin
     # Spider posts from sougou, only one page.
-    # curl 'http://weixin.sogou.com/gzhjs?&openid=oIWsFt4AIyhWhM2kZXI86sLjzXCU&page=1' -H 'Host: weixin.sogou.com' -H 'Cookie: SNUID=C1B6DDC8E6E3F1B584C821B5E6528CAD; SUV=1428050203531472;'
     #
     # @param [Enumerable<String>] openid
     # @param [Integer] page_index
     # @param [Enumerable<String>] date_last
     # @return [Hash] A spider posts hash with total_pages etc.
-    def self.spider_posts_from_sougou(openid, page_index = 1, date_last = (Time.now - 3600 * 24 * 10).strftime("%Y-%m-%d"))
-      json_url = "http://weixin.sogou.com/gzhjs?&openid=#{openid}&page=#{page_index}"
+    def self.spider_posts_from_sougou(openid, aes, page_index = 1, date_last = (Time.now - 3600 * 24 * 10).strftime("%Y-%m-%d"))
+
+      json_url = "http://weixin.sogou.com/gzhjs?&openid=#{openid}&page=#{page_index}&#{aes}"
       res = RestClient.get json_url
 
       if !res.valid_encoding?
@@ -42,16 +42,19 @@ module WxExt
       total_pages = nil
       page = nil
 
-      reg = /gzh\((.*)\).*\/\/<\!--.*--><\!--(\d+)-->/m
+      reg = /gzh\((.*)\).*/m
+
       if reg =~ res.to_s
-        xml_articles = JSON.parse($1)['items']
-        total_items = JSON.parse($1)['totalItems']
-        total_pages = JSON.parse($1)['totalPages']
-        page = JSON.parse($1)['page']
+        json_hash = JSON.parse($1)
+        xml_articles = json_hash['items']
+        total_items = json_hash['totalItems']
+        total_pages = json_hash['totalPages']
+        page = json_hash['page']
         response_time = $2.to_i
       else
         return {}
       end
+
       spider_posts = []
       xml_articles.each do |xml|
         doc = Nokogiri::XML(xml, nil, 'UTF-8')
@@ -84,6 +87,7 @@ module WxExt
           break
         end
       end
+
       {
         total_items: total_items,
         total_pages: total_pages,
