@@ -22,7 +22,7 @@ module WxExt
       json_url = "http://weixin.sogou.com/gzhjs?&openid=#{openid}&page=#{page_index}"
       res = RestClient.get json_url
 
-      if ! res.valid_encoding?
+      if !res.valid_encoding?
         res = res.scrub!('?')
       end
 

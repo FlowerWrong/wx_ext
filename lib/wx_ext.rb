@@ -3,6 +3,7 @@
 require 'wx_ext/version'
 require 'wx_ext/sougou_weixin'
 require 'wx_ext/wei_xin'
+require 'wx_ext/wechat_pay'
 require 'wx_ext/api'
 
 # Weixin extention, sougou spider and weixin api.
