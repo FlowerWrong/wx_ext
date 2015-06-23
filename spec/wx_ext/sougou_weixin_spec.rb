@@ -5,9 +5,7 @@ require 'awesome_print'
 describe WxExt::SougouWeixin do
 
   it 'should spider some posts from weixin.sougou.com' do
-    js_file = "#{WxExt.root}/node/aes.js"
-    aes = `phantomjs #{js_file} 'oIWsFt6S9QnZvoC1RZtWxvm-vPQ4'`
-    spider_posts = WxExt::SougouWeixin.spider_posts_from_sougou('oIWsFt6S9QnZvoC1RZtWxvm-vPQ4', aes)
+    spider_posts = WxExt::SougouWeixin.spider_posts_from_sougou('oIWsFt6S9QnZvoC1RZtWxvm-vPQ4')
     p spider_posts[:spider_posts].count
     expect(spider_posts[:original_count]).to eql(10)
   end

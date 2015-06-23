@@ -17,30 +17,30 @@ module WxExt
     # @param [Integer] page_index
     # @param [Enumerable<String>] date_last
     # @return [Hash] A spider posts hash with total_pages etc.
-    def self.spider_posts_from_sougou(openid, aes, page_index = 1, date_last = (Time.now - 3600 * 24 * 10).strftime("%Y-%m-%d"))
-
-      json_url = "http://weixin.sogou.com/gzhjs?&openid=#{openid}&page=#{page_index}&#{aes}"
-      res = RestClient.get json_url
-
-      if !res.valid_encoding?
-        res = res.scrub!('?')
+    def self.spider_posts_from_sougou(openid, page_index = 1, date_last = (Time.now - 3600 * 24 * 10).strftime("%Y-%m-%d"))
+      js_file = "#{WxExt.root}/node/aes.js"
+      aes = `phantomjs #{js_file} #{openid}`
+      aes = aes.split("\n")[0]
+      if aes == 'null'
+        return {
+            msg: 'can not get aes'
+        }
       end
+      json_url = "http://weixin.sogou.com/gzhjs?&openid=#{openid}&page=#{page_index}&#{aes}"
 
-      reg_resent = /.*SNUID=(.*);\spath.*/m
+      res = RestClient.get json_url, headers: {"Accept-Encoding" => ""}
+
+      res = res.scrub!('?') unless res.valid_encoding?
+
+      reg_resent = /.*SNUID=(.*);\spath=.*/m
       if reg_resent =~ res
         suv = Time.now.to_i * 1000000 + (rand * 1000).round
         snuid = $1
-        res = RestClient.get json_url, :Cookie => "SNUID=#{snuid}; SUV=#{suv};"
+        res = RestClient.get json_url, :Cookie => "SNUID=#{snuid}; SUV=#{suv};", headers: {"Accept-Encoding" => ""}
       end
 
       date_last_arr = date_last.split('-')
       date_last_to_com = Time.new(date_last_arr[0], date_last_arr[1], date_last_arr[2])
-
-      xml_articles = nil
-      response_time = nil
-      total_items = nil
-      total_pages = nil
-      page = nil
 
       reg = /gzh\((.*)\).*/m
 
@@ -52,14 +52,15 @@ module WxExt
         page = json_hash['page']
         response_time = $2.to_i
       else
-        return {}
+        return {
+            msg: 'not match gzh...'
+        }
       end
 
       spider_posts = []
       xml_articles.each do |xml|
         doc = Nokogiri::XML(xml, nil, 'UTF-8')
         date = doc.at_xpath('//DOCUMENT/item/display/date').text
-        spider_post = {}
 
         date_arr = date.to_s.split('-')
         date_to_com = Time.new(date_arr[0], date_arr[1], date_arr[2])
@@ -95,7 +96,8 @@ module WxExt
         response_time: response_time,
         spider_posts: spider_posts,
         original_count: xml_articles.count,
-        count: spider_posts.count
+        count: spider_posts.count,
+        msg: 'ok'
       }
     end
 
