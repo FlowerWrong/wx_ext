@@ -10,5 +10,6 @@ page.open(url, function(status) {
     var aes = page.evaluate(function() {
         return window.aes;
     });
+    console.log(aes);
     phantom.exit();
 });
