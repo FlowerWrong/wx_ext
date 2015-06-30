@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe WxExt::WeiXin do
   before(:all) do
-    @weixin = WxExt::WeiXin.new 'flowerwrong@hotmail.com', '1*flower@wrong*1'
+    @weixin = WxExt::WeiXin.new 'guangyaoren@thecampus.cc', 'women404'
   end
 
   it 'should login to the mp' do
@@ -25,12 +25,9 @@ describe WxExt::WeiXin do
   it 'should search msg with keyword' do
     res_hash = @weixin.login
     flag = @weixin.init
-    puts flag
     if flag
       require 'uri'
       ha = @weixin.get_msg_items(20, 7, 1, 'search', URI.encode('呢'), '', '')
-      puts '-' * 20
-      puts ha
     end
   end
 
@@ -107,8 +104,6 @@ describe WxExt::WeiXin do
     flag = @weixin.init
     if flag
       fans_res_hash = @weixin.get_fans_count
-      puts '==' * 20
-      puts fans_res_hash
       expect(fans_res_hash[:status]).to eql(0)
     end
   end
@@ -118,8 +113,6 @@ describe WxExt::WeiXin do
     flag = @weixin.init
     if flag
       res_hash = @weixin.get_msg_items(20, 7, 1, '', '', '', '')
-      puts '==' * 20
-      puts res_hash
       expect(res_hash[:status]).to eql(0)
     else
       puts 'init failed'
@@ -131,8 +124,6 @@ describe WxExt::WeiXin do
     flag = @weixin.init
     msg_res_hash = @weixin.get_msg_items if flag
     res_hash = @weixin.get_new_msg_num(msg_res_hash[:latest_msg_id=])
-    puts '==' * 20
-    puts res_hash
     expect(res_hash['ret'].to_s).to eql('0')
   end
 
@@ -149,7 +140,6 @@ describe WxExt::WeiXin do
     res_hash = @weixin.login
     flag = @weixin.init
     res_hash = @weixin.get_contact_info('204060720')
-    puts res_hash
     expect(res_hash['base_resp']['ret'].to_s).to eql('0')
   end
 
@@ -157,20 +147,14 @@ describe WxExt::WeiXin do
     res_hash = @weixin.login
     flag = @weixin.init
     res_hash = @weixin.get_country_list
-    puts res_hash
-    expect(res_hash["num"].to_s).to match(/\d+/)
+    expect(res_hash['num']).to eq(169)
   end
 
   it 'should upload_file method should return a right hash' do
     res_hash = @weixin.login
     flag = @weixin.init
-    puts @weixin.token
-    puts @weixin.ticket_id
-    puts @weixin.ticket
     file = File.new(File.join(WxExt.spec, "test.png"), 'rb')
     file_hash = @weixin.upload_file(file, "test.png")
-    puts "==" * 20
-    puts file_hash
     expect(file_hash["base_resp"]["ret"].to_s).to eql("0")
   end
 
@@ -198,8 +182,6 @@ describe WxExt::WeiXin do
         vid: ''
     }
     msg_hash = @weixin.upload_single_msg(single_msg_params)
-    puts "==" * 20
-    puts msg_hash
     expect(msg_hash["ret"].to_s).to eql("0")
   end
 
@@ -234,8 +216,6 @@ describe WxExt::WeiXin do
         vid: ''
     }
     msg_hash = @weixin.upload_multi_msg(msg_params)
-    puts "==" * 20
-    puts msg_hash
     expect(msg_hash["ret"].to_s).to eql("0")
   end
 
@@ -277,10 +257,7 @@ describe WxExt::WeiXin do
   it 'should get app msg list with json' do
     res_hash = @weixin.login
     flag = @weixin.init
-
     msg_hash = @weixin.get_app_msg_list
-    puts "==" * 20
-    puts msg_hash["app_msg_info"]["item"][0]["app_id"]
     expect(msg_hash["base_resp"]["ret"].to_s).to eql("0")
   end
 end
