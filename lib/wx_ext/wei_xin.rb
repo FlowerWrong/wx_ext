@@ -9,10 +9,10 @@ require 'uri'
 class String
   def remove_unmatched_parens
     self[/
-            (?<valid>
-                \(\g<valid>*\)
-                |[^()]
-            )+
+          (?<valid>
+            \(\g<valid>*\)
+            |[^()]
+          )+
         /x]
   end
 end
@@ -43,21 +43,21 @@ module WxExt
     def login
       password = Digest::MD5.hexdigest @password
       login_headers = {
-          referer: 'https://mp.weixin.qq.com/'
+        referer: 'https://mp.weixin.qq.com/'
       }
       login_params = {
-          username: @account,
-          pwd: password,
-          imgcode: '',
-          f: 'json'
+        username: @account,
+        pwd: password,
+        imgcode: '',
+        f: 'json'
       }
 
       resource = RestClient::Resource.new(@home_url, headers: login_headers)
       res = resource['cgi-bin/login'].post login_params
       @cookies = res.cookies
       return_hash = {
-          status: 0,
-          msg: 'ok'
+        status: 0,
+        msg: 'ok'
       }
 
       # 0: "ok", "redirect_url" => ""
@@ -71,23 +71,23 @@ module WxExt
         @token = $1 if token_reg =~ res.to_s
       elsif sta == '-8'
         return_hash = {
-            status: -8,
-            msg: 'need_varify_code'
+          status: -8,
+          msg: 'need_varify_code'
         }
       elsif sta == '-23'
         return_hash = {
-            status: -23,
-            msg: 'password_error'
+          status: -23,
+          msg: 'password_error'
         }
       elsif sta == '-21'
         return_hash = {
-            status: -21,
-            msg: 'user_not_exist'
+          status: -21,
+          msg: 'user_not_exist'
         }
       else
         return_hash = {
-            status: -1,
-            msg: 'system_error'
+          status: -1,
+          msg: 'system_error'
         }
       end
       return_hash
@@ -99,16 +99,16 @@ module WxExt
     def init
       home_url = "https://mp.weixin.qq.com/cgi-bin/home?t=home/index&lang=zh_CN&token=#{@token}"
       headers = {
-          host: 'mp.weixin.qq.com',
-          referer: 'https://mp.weixin.qq.com/'
+        host: 'mp.weixin.qq.com',
+        referer: 'https://mp.weixin.qq.com/'
       }
 
       @cookies = {
-          data_bizuin: URI.unescape(cookies['data_bizuin']),
-          data_ticket: URI.unescape(cookies['data_ticket']),
-          slave_user: URI.unescape(cookies['slave_user']),
-          slave_sid: URI.unescape(cookies['slave_sid']),
-          bizuin: URI.unescape(cookies['bizuin'])
+        data_bizuin: URI.unescape(cookies['data_bizuin']),
+        data_ticket: URI.unescape(cookies['data_ticket']),
+        slave_user: URI.unescape(cookies['slave_user']),
+        slave_sid: URI.unescape(cookies['slave_sid']),
+        bizuin: URI.unescape(cookies['bizuin'])
       }
 
       msg_send_url = 'https://mp.weixin.qq.com/cgi-bin/masssendpage'\
@@ -139,8 +139,8 @@ module WxExt
                    "&groupid=1&ticket_id=#{@ticket_id}"\
                    "&ticket=#{@ticket}&token=#{@token}&lang=zh_CN"
       response = RestClient.post upload_url, file: file,
-                                 Filename: file_name,
-                                 folder: folder
+                                             Filename: file_name,
+                                             folder: folder
       JSON.parse response.to_s
     end
 
@@ -153,7 +153,7 @@ module WxExt
                             '?t=ajax-response&sub=create&type=10&token'\
                             "=#{@token}&lang=zh_CN"
       headers = {
-          referer: 'https://mp.weixin.qq.com/cgi-bin/appmsg?t=media/appmsg_edit'\
+        referer: 'https://mp.weixin.qq.com/cgi-bin/appmsg?t=media/appmsg_edit'\
                  '&action=edit&type=10&isMul=0&isNew=1&lang=zh_CN'\
                  "&token=#{@token}"
       }
@@ -170,7 +170,7 @@ module WxExt
       uri = 'cgi-bin/operate_appmsg?t=ajax-response&sub=create&type=10'\
       "&token=#{@token}&lang=zh_CN"
       headers = {
-          referer: 'https://mp.weixin.qq.com/cgi-bin/appmsg'\
+        referer: 'https://mp.weixin.qq.com/cgi-bin/appmsg'\
         '?t=media/appmsg_edit&action=edit&type=10'\
         "&isMul=1&isNew=1&lang=zh_CN&token=#{@token}"
       }
@@ -188,10 +188,10 @@ module WxExt
       uri = 'cgi-bin/operate_appmsg?sub=preview&t=ajax-appmsg-preview'\
             "&type=10&token=#{@token}&lang=zh_CN"
       headers = {
-          referer: 'https://mp.weixin.qq.com/cgi-bin/appmsg?t=media/appmsg_edit'\
+        referer: 'https://mp.weixin.qq.com/cgi-bin/appmsg?t=media/appmsg_edit'\
                  "&action=edit&type=10&isMul=0&isNew=1&lang=zh_CN&token=#{@token}",
-          host: 'mp.weixin.qq.com',
-          x_requested_with: 'XMLHttpRequest'
+        host: 'mp.weixin.qq.com',
+        x_requested_with: 'XMLHttpRequest'
       }
       resource = RestClient::Resource.new(@home_url, headers: headers, cookies: @cookies)
 
@@ -207,9 +207,9 @@ module WxExt
     def broadcast_msg(msg_params)
       uri = "cgi-bin/masssend?t=ajax-response&token=#{@token}&lang=zh_CN"
       headers = {
-          referer: 'https://mp.weixin.qq.com/cgi-bin/masssendpage'\
+        referer: 'https://mp.weixin.qq.com/cgi-bin/masssendpage'\
                  "?t=mass/send&token=#{token}&lang=zh_CN",
-          host: 'mp.weixin.qq.com'
+        host: 'mp.weixin.qq.com'
       }
       resource = RestClient::Resource.new(@home_url, headers: headers,
                                           cookies: @cookies)
@@ -239,14 +239,14 @@ module WxExt
       uri = 'cgi-bin/getnewmsgnum?f=json&t=ajax-getmsgnum'\
             "&lastmsgid=#{last_msg_id}&token=#{@token}&lang=zh_CN"
       post_params = {
-          ajax: 1,
-          f: 'json',
-          lang: 'zh_CN',
-          random: rand,
-          token: @token
+        ajax: 1,
+        f: 'json',
+        lang: 'zh_CN',
+        random: rand,
+        token: @token
       }
       post_headers = {
-          referer: 'https://mp.weixin.qq.com/cgi-bin/message?t=message/list'\
+        referer: 'https://mp.weixin.qq.com/cgi-bin/message?t=message/list'\
                  "&count=20&day=7&token=#{@token}&lang=zh_CN"
       }
       resource = RestClient::Resource.new(@home_url, headers: post_headers,
@@ -263,14 +263,14 @@ module WxExt
       uri = 'cgi-bin/getcontactinfo?t=ajax-getcontactinfo'\
             "&lang=zh_CN&fakeid=#{fakeid}"
       post_params = {
-          ajax: 1,
-          f: 'json',
-          lang: 'zh_CN',
-          random: rand,
-          token: @token
+        ajax: 1,
+        f: 'json',
+        lang: 'zh_CN',
+        random: rand,
+        token: @token
       }
       post_headers = {
-          referer: 'https://mp.weixin.qq.com/cgi-bin/contactmanage?t=user/index'\
+        referer: 'https://mp.weixin.qq.com/cgi-bin/contactmanage?t=user/index'\
                  "&pagesize=10&pageidx=0&type=0&token=#{@token}&lang=zh_CN"
       }
       resource = RestClient::Resource.new(@home_url, headers: post_headers,
@@ -324,27 +324,22 @@ module WxExt
           status: -1,
           msg: 'system_error'
       }
-      res_str = res.to_s
-      emoji_hash = qq_emoji
-      emoji_hash.each do |key, val|
-        emoji_reg = /#{key.remove_unmatched_parens}/
-        res_str = res_str.gsub(emoji_reg, val)
-      end
-      if reg =~ res_str
+      if reg =~ res.to_s
+        res_str = $3
         return_hash = {
-            status: 0,
-            msg: 'ok',
-            total_count: $1,
-            latest_msg_id: $2,
-            count: 20,
-            day: 7,
-            frommsgid: '',
-            can_search_msg: '1',
-            offset: '',
-            action: '',
-            keyword: '',
-            msg_items: JSON.parse($3)['msg_item'],
-            filterivrmsg: $4
+          status: 0,
+          msg: 'ok',
+          total_count: $1,
+          latest_msg_id: $2,
+          count: 20,
+          day: 7,
+          frommsgid: '',
+          can_search_msg: '1',
+          offset: '',
+          action: '',
+          keyword: '',
+          msg_items: JSON.parse(res_str)['msg_item'],
+          filterivrmsg: $4
         }
       end
       return_hash
@@ -359,19 +354,19 @@ module WxExt
       res = RestClient.get(url, cookies: @cookies)
       reg = /.*pageIdx\s*:\s*(\d*).*pageCount\s*:\s*(\d*).*pageSize\s*:\s*(\d*).*groupsList\s*:\s*\((.*)\)\.groups,.*friendsList\s*:\s*\((.*)\)\.contacts,.*totalCount\s*:\s*\'(\d*)\'\s*\*\s*.*/m
       return_hash = {
-          status: -1,
-          msg: 'system_error'
+        status: -1,
+        msg: 'system_error'
       }
       if reg =~ res.to_s
         return_hash = {
-            status: 0,
-            msg: 'ok',
-            page_index: $1,
-            page_count: $2,
-            page_size: $3,
-            group_list: JSON.parse($4)['groups'],
-            friends_list: JSON.parse($5)['contacts'],
-            total_count: $6
+          status: 0,
+          msg: 'ok',
+          page_index: $1,
+          page_count: $2,
+          page_size: $3,
+          group_list: JSON.parse($4)['groups'],
+          friends_list: JSON.parse($5)['contacts'],
+          total_count: $6
         }
       end
       return_hash
@@ -387,20 +382,20 @@ module WxExt
       post_uri = 'cgi-bin/singlesend'\
                  "?t=ajax-response&f=json&token=#{ @token }&lang=zh_CN"
       params = {
-          ajax: 1,
-          content: content,
-          f: 'json',
-          imgcode: '',
-          lang: 'zh_CN',
-          mask: false,
-          quickreplyid: quickreplyid,
-          random: rand,
-          tofakeid: tofakeid,
-          token: @token,
-          type: 1
+        ajax: 1,
+        content: content,
+        f: 'json',
+        imgcode: '',
+        lang: 'zh_CN',
+        mask: false,
+        quickreplyid: quickreplyid,
+        random: rand,
+        tofakeid: tofakeid,
+        token: @token,
+        type: 1
       }
       headers = {
-          referer: 'https://mp.weixin.qq.com/cgi-bin/message'\
+        referer: 'https://mp.weixin.qq.com/cgi-bin/message'\
                  "?t=message/list&count=20&day=7&token=#{ @token }&lang=zh_CN"
       }
       resource = RestClient::Resource.new(@home_url, headers: headers,
@@ -418,16 +413,16 @@ module WxExt
     def collect_msg(msgid)
       uri = "cgi-bin/setstarmessage?t=ajax-setstarmessage&token=#{ @token }&lang=zh_CN"
       params = {
-          ajax: 1,
-          f: 'json',
-          lang: 'zh_CN',
-          msgid: msgid,
-          random: rand,
-          token: @token,
-          value: 1
+        ajax: 1,
+        f: 'json',
+        lang: 'zh_CN',
+        msgid: msgid,
+        random: rand,
+        token: @token,
+        value: 1
       }
       headers = {
-          referer: 'https://mp.weixin.qq.com/cgi-bin/message'\
+        referer: 'https://mp.weixin.qq.com/cgi-bin/message'\
                  "?t=message/list&token=#{ @token }&count=20&day=7"
       }
       resource = RestClient::Resource.new(@home_url, headers: headers,
@@ -443,16 +438,16 @@ module WxExt
     def un_collect_msg(msgid)
       uri = "cgi-bin/setstarmessage?t=ajax-setstarmessage&token=#{ @token }&lang=zh_CN"
       params = {
-          ajax: 1,
-          f: 'json',
-          lang: 'zh_CN',
-          msgid: msgid,
-          random: rand,
-          token: @token,
-          value: 0
+        ajax: 1,
+        f: 'json',
+        lang: 'zh_CN',
+        msgid: msgid,
+        random: rand,
+        token: @token,
+        value: 0
       }
       headers = {
-          referer: 'https://mp.weixin.qq.com/cgi-bin/message'\
+        referer: 'https://mp.weixin.qq.com/cgi-bin/message'\
                  "?t=message/list&token=#{ @token }&count=20&day=7"
       }
       resource = RestClient::Resource.new(@home_url, headers: headers,
@@ -465,11 +460,11 @@ module WxExt
 
     def decode_cookies(cookies)
       need_decode = [
-          'data_bizuin',
-          'data_ticket',
-          'slave_user',
-          'slave_sid',
-          'bizuin'
+        'data_bizuin',
+        'data_ticket',
+        'slave_user',
+        'slave_sid',
+        'bizuin'
       ]
       cookies.each do |key, val|
         if need_decode.include?(key)
