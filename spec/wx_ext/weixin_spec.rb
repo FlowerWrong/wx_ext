@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe WxExt::WeiXin do
   before(:all) do
-    @weixin = WxExt::WeiXin.new 'guangyaoren@thecampus.cc', 'women404'
+    @weixin = WxExt::WeiXin.new '', ''
   end
 
   it 'should login to the mp' do
