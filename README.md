@@ -11,7 +11,7 @@ phantomjs
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'wx_ext', '~> 0.3.1'
+gem 'wx_ext', github: 'FlowerWrong/wx_ext'
 ```
 
 And then execute:

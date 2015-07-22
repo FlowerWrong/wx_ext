@@ -23,12 +23,12 @@ module WxExt
       aes = aes.split("\n")[0]
       if aes == 'null'
         return {
-            msg: 'can not get aes'
+          msg: 'can not get aes'
         }
       end
       json_url = "http://weixin.sogou.com/gzhjs?&openid=#{openid}&page=#{page_index}&#{aes}"
 
-      res = RestClient.get json_url, headers: {"Accept-Encoding" => ""}
+      res = RestClient.get json_url, headers: { 'Accept-Encoding' => '' }
 
       res = res.scrub!('?') unless res.valid_encoding?
 
@@ -36,7 +36,7 @@ module WxExt
       if reg_resent =~ res
         suv = Time.now.to_i * 1000000 + (rand * 1000).round
         snuid = $1
-        res = RestClient.get json_url, :Cookie => "SNUID=#{snuid}; SUV=#{suv};", headers: {"Accept-Encoding" => ""}
+        res = RestClient.get json_url, :Cookie => "SNUID=#{snuid}; SUV=#{suv};", headers: { 'Accept-Encoding' => '' }
       end
 
       date_last_arr = date_last.split('-')
@@ -53,7 +53,7 @@ module WxExt
         response_time = $2.to_i
       else
         return {
-            msg: 'not match gzh...'
+          msg: 'not match gzh...'
         }
       end
 
@@ -88,7 +88,6 @@ module WxExt
           break
         end
       end
-
       {
         total_items: total_items,
         total_pages: total_pages,
@@ -97,7 +96,8 @@ module WxExt
         spider_posts: spider_posts,
         original_count: xml_articles.count,
         count: spider_posts.count,
-        msg: 'ok'
+        msg: 'ok',
+        aes: aes
       }
     end
 
