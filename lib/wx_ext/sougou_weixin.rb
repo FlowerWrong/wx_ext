@@ -17,20 +17,32 @@ module WxExt
     # @param [Integer] page_index
     # @param [Enumerable<String>] date_last
     # @return [Hash] A spider posts hash with total_pages etc.
-    def self.spider_posts_from_sougou(openid, page_index = 1, date_last = (Time.now - 3600 * 24 * 10).strftime("%Y-%m-%d"))
+    def self.spider_posts_from_sougou(openid, page_index = 1, date_last = (Time.now - 3600 * 24 * 10).strftime("%Y-%m-%d"), proxy_host = nil, proxy_port = 8008)
       js_file = "#{WxExt.root}/node/aes.js"
-      aes = `phantomjs #{js_file} #{openid}`
+      if proxy_host.nil?
+        aes = `phantomjs #{js_file} #{openid}`
+      else
+        aes = `phantomjs #{js_file} #{openid} "--proxy=#{proxy_host}:#{proxy_port}"`
+      end
+
       aes = aes.split("\n")[0]
       if aes == 'null'
-        return {
-          msg: 'can not get aes'
-        }
+        return { msg: 'can not get aes' }
       end
       json_url = "http://weixin.sogou.com/gzhjs?&openid=#{openid}&page=#{page_index}&#{aes}"
 
-      res = RestClient.get json_url, headers: { 'Accept-Encoding' => '' }
+      res = nil
+      RestClient.proxy = "http://#{proxy_host}:#{proxy_port}" unless proxy_host.nil?
 
-      res = res.scrub!('?') unless res.valid_encoding?
+      begin
+        res = RestClient.get json_url, headers: { 'Accept-Encoding' => '' }
+      rescue RestClient::ServerBrokeConnection
+        return { msg: 'RestClient::ServerBrokeConnection' }
+      end
+
+      return { msg: 'res is nil' } if res.nil?
+
+      res = res.scrub!('?') unless res.nil? && res.valid_encoding?
 
       reg_resent = /.*SNUID=(.*);\spath=.*/m
       if reg_resent =~ res
@@ -52,9 +64,7 @@ module WxExt
         page = json_hash['page']
         response_time = $2.to_i
       else
-        return {
-          msg: 'not match gzh...'
-        }
+        return { msg: 'not match gzh...' }
       end
 
       spider_posts = []
