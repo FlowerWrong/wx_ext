@@ -20,9 +20,9 @@ module WxExt
     def self.spider_posts_from_sougou(openid, page_index = 1, date_last = (Time.now - 3600 * 24 * 10).strftime("%Y-%m-%d"), proxy_host = nil, proxy_port = 8008)
       js_file = "#{WxExt.root}/node/aes.js"
       if proxy_host.nil?
-        aes = `phantomjs #{js_file} #{openid}`
+        aes = `node #{js_file} #{openid}`
       else
-        aes = `phantomjs #{js_file} #{openid} "--proxy=#{proxy_host}:#{proxy_port}"`
+        aes = `node #{js_file} #{openid} "--proxy=#{proxy_host}:#{proxy_port}"`
       end
 
       aes = aes.split("\n")[0]
