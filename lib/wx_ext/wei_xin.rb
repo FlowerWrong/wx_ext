@@ -166,13 +166,26 @@ module WxExt
     #
     # @param [Hash] msg_params
     # @return [Hash] A json parse hash.
-    def upload_multi_msg(msg_params)
-      uri = 'cgi-bin/operate_appmsg?t=ajax-response&sub=create&type=10'\
+    def upload_multi_msg(msg_params, sub = 'create')
+      uri = "cgi-bin/operate_appmsg?t=ajax-response&sub=#{sub}&type=10"\
       "&token=#{@token}&lang=zh_CN"
       headers = {
         referer: 'https://mp.weixin.qq.com/cgi-bin/appmsg'\
         '?t=media/appmsg_edit&action=edit&type=10'\
         "&isMul=1&isNew=1&lang=zh_CN&token=#{@token}"
+      }
+      resource = RestClient::Resource.new(@home_url, headers: headers, cookies: @cookies)
+      post_msg_res = resource[uri].post msg_params
+      JSON.parse post_msg_res.to_s
+    end
+
+    def update_multi_msg(msg_params, appmsgid)
+      uri = 'cgi-bin/operate_appmsg?t=ajax-response&sub=update&type=10'\
+      "&token=#{@token}&lang=zh_CN"
+      headers = {
+        referer: 'https://mp.weixin.qq.com/cgi-bin/appmsg'\
+        '?t=media/appmsg_edit&action=edit&type=10'\
+        "&isMul=1&appmsgid=#{appmsgid}&lang=zh_CN&token=#{@token}"
       }
       resource = RestClient::Resource.new(@home_url, headers: headers, cookies: @cookies)
       post_msg_res = resource[uri].post msg_params
