@@ -166,8 +166,8 @@ module WxExt
     #
     # @param [Hash] msg_params
     # @return [Hash] A json parse hash.
-    def upload_multi_msg(msg_params, sub = 'create')
-      uri = "cgi-bin/operate_appmsg?t=ajax-response&sub=#{sub}&type=10"\
+    def upload_multi_msg(msg_params)
+      uri = 'cgi-bin/operate_appmsg?t=ajax-response&sub=create&type=10'\
       "&token=#{@token}&lang=zh_CN"
       headers = {
         referer: 'https://mp.weixin.qq.com/cgi-bin/appmsg'\
