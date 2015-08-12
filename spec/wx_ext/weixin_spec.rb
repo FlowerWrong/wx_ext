@@ -261,7 +261,6 @@ describe WxExt::WeiXin do
     expect(msg_hash["base_resp"]["ret"].to_s).to eql("0")
   end
 
-
   # 回复单个人的页面
   it 'should get singe send message' do
     @weixin.login

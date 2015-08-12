@@ -477,7 +477,6 @@ module WxExt
       JSON.parse res.to_s
     end
 
-
     # 和单个联系人聊天的界面
     def single_send_page(tofakeid, action = 'index')
       # url = "https://mp.weixin.qq.com/cgi-bin/singlesendpage?tofakeid=#{tofakeid}&t=message/send&action=#{action}&token=#{@token}&lang=zh_CN"
