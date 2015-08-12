@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe WxExt::WeiXin do
   before(:all) do
-    @weixin = WxExt::WeiXin.new '', ''
+    @weixin = WxExt::WeiXin.new 'flowerwrong@hotmail.com', '1*flower@wrong*1'
   end
 
   it 'should login to the mp' do
@@ -27,7 +27,7 @@ describe WxExt::WeiXin do
     flag = @weixin.init
     if flag
       require 'uri'
-      ha = @weixin.get_msg_items(20, 7, 1, 'search', URI.encode('呢'), '', '')
+      ha = @weixin.get_msg_items(20, 7, 1, '','', '', '')
     end
   end
 
@@ -259,5 +259,13 @@ describe WxExt::WeiXin do
     flag = @weixin.init
     msg_hash = @weixin.get_app_msg_list
     expect(msg_hash["base_resp"]["ret"].to_s).to eql("0")
+  end
+
+  # 回复单个人的页面
+  it 'should get singe send message' do
+    @weixin.login
+    @weixin.init
+    single_hash = @weixin.single_send_page(608120400)
+    expect(single_hash[:status]).to eql(0)
   end
 end

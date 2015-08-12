@@ -350,6 +350,8 @@ module WxExt
           msg: 'ok',
           total_count: total_count,
           latest_msg_id: latest_msg_id,
+          count: count,
+          day: day,
           count: 20,
           day: 7,
           frommsgid: '',
@@ -475,6 +477,32 @@ module WxExt
       JSON.parse res.to_s
     end
 
+    # 和单个联系人聊天的界面
+    def single_send_page(tofakeid, action = 'index')
+      # url = "https://mp.weixin.qq.com/cgi-bin/singlesendpage?tofakeid=#{tofakeid}&t=message/send&action=#{action}&token=#{@token}&lang=zh_CN"
+      url = "https://mp.weixin.qq.com/cgi-bin/singlesendpage?tofakeid=608120400&t=message/send&action=index&token=83534687&lang=zh_CN"
+      resource = RestClient::Resource.new(url, cookies: @cookies)
+      res = resource.get
+      reg = /.*cgiData\s*=\s*(.*);.*wx\.cgiData\.tofakeid.*/m
+      return_hash = {
+        status: -1,
+        msg: 'system_error'
+      }
+      if reg =~ res.to_s
+        regex = /\u0014/
+        res_str = $1
+        res_str = res_str.gsub regex, ' 表情 '
+
+        return_hash = {
+          status: 0,
+          msg: 'ok',
+          to_uin: JSON.parse(res_str)['msg_items']['to_uin'],
+          msg_items: JSON.parse(res_str)['msg_items']['msg_item']
+        }
+      end
+      return_hash
+    end
+
     private
 
     def decode_cookies(cookies)
@@ -498,5 +526,6 @@ module WxExt
 
       }
     end
+
   end
 end
