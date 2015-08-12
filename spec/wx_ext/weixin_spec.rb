@@ -28,7 +28,6 @@ describe WxExt::WeiXin do
     if flag
       require 'uri'
       ha = @weixin.get_msg_items(20, 7, 1, '','', '', '')
-      p ha
     end
   end
 
