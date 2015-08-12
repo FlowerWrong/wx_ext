@@ -1,5 +1,4 @@
 # encoding: UTF-8
-
 require 'digest'
 require 'rest_client'
 require 'json'
