@@ -502,6 +502,20 @@ module WxExt
       return_hash
     end
 
+    # 返回cookie
+    def get_cookie
+      login_hash = login
+      if login_hash[:status]
+        if init
+          return @cookies
+        else
+          return nil
+        end
+      else
+        return nil
+      end
+    end
+
     private
 
     def decode_cookies(cookies)

@@ -268,4 +268,10 @@ describe WxExt::WeiXin do
     single_hash = @weixin.single_send_page(608120400)
     expect(single_hash[:status]).to eql(0)
   end
+
+  # 返回cookie
+  it 'should get cookie' do
+    cookie_hash = @weixin.get_cookie
+    expect(cookie_hash[:slave_user]).to eq('gh_44ab6b22615e')
+  end
 end
