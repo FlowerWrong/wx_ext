@@ -478,8 +478,7 @@ module WxExt
 
     # 和单个联系人聊天的界面
     def single_send_page(tofakeid, action = 'index')
-      # url = "https://mp.weixin.qq.com/cgi-bin/singlesendpage?tofakeid=#{tofakeid}&t=message/send&action=#{action}&token=#{@token}&lang=zh_CN"
-      url = "https://mp.weixin.qq.com/cgi-bin/singlesendpage?tofakeid=608120400&t=message/send&action=index&token=83534687&lang=zh_CN"
+      url = "https://mp.weixin.qq.com/cgi-bin/singlesendpage?tofakeid=#{tofakeid}&t=message/send&action=#{action}&token=#{@token}&lang=zh_CN"
       resource = RestClient::Resource.new(url, cookies: @cookies)
       res = resource.get
       reg = /.*cgiData\s*=\s*(.*);.*wx\.cgiData\.tofakeid.*/m
@@ -491,7 +490,6 @@ module WxExt
         regex = /\u0014/
         res_str = $1
         res_str = res_str.gsub regex, ' 表情 '
-
         return_hash = {
           status: 0,
           msg: 'ok',
