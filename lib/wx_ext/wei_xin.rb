@@ -351,8 +351,6 @@ module WxExt
           latest_msg_id: latest_msg_id,
           count: count,
           day: day,
-          count: 20,
-          day: 7,
           frommsgid: '',
           can_search_msg: '1',
           offset: '',
