@@ -65,6 +65,7 @@ module WxExt
       # -21: "user not exist"
       res_hash = JSON.parse res.to_s
       sta = res_hash['base_resp']['ret'].to_s
+
       if sta == '0'
         token_reg = /.*token=(\d+)\".*/
         @token = $1 if token_reg =~ res.to_s
@@ -82,6 +83,11 @@ module WxExt
         return_hash = {
           status: -21,
           msg: 'user_not_exist'
+        }
+      elsif sta == '-7'
+        return_hash = {
+          status: -21,
+          msg: 'access deny'
         }
       else
         return_hash = {
@@ -456,6 +462,7 @@ module WxExt
     # @param [String] msgid
     # @return [Hash] A json parse hash.
     def un_collect_msg(msgid)
+
       uri = "cgi-bin/setstarmessage?t=ajax-setstarmessage&token=#{ @token }&lang=zh_CN"
       params = {
         ajax: 1,
