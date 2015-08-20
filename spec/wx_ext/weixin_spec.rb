@@ -99,6 +99,13 @@ describe WxExt::WeiXin do
   end
 =end
 
+  it 'should un_collect msg' do
+    @weixin.login
+    @weixin.init
+    star_res_hash = @weixin.un_collect_msg('207835874')
+    p star_res_hash
+  end
+
   it 'should get fans count' do
     res_hash = @weixin.login
     flag = @weixin.init

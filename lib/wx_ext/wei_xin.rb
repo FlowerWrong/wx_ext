@@ -425,7 +425,6 @@ module WxExt
       resource = RestClient::Resource.new(@home_url, headers: headers,
                                           cookies: @cookies)
       res = resource[post_uri].post params
-      #
       # 10706: "customer block" => "48小时内的才行"
       JSON.parse res.to_s
     end
@@ -460,7 +459,6 @@ module WxExt
     # @param [String] msgid
     # @return [Hash] A json parse hash.
     def un_collect_msg(msgid)
-
       uri = "cgi-bin/setstarmessage?t=ajax-setstarmessage&token=#{ @token }&lang=zh_CN"
       params = {
         ajax: 1,
