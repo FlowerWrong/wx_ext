@@ -140,8 +140,10 @@ describe WxExt::WeiXin do
     res_hash = @weixin.login
     flag = @weixin.init
     if flag
-      account_message_res_hash = @weixin.get_account_message
-      expect(account_message_res_hash.count).to eql(3)
+      account_message_res_array = @weixin.get_account_message
+      expect(account_message_res_array[0]).to match(/\S*/)
+      expect(account_message_res_array[1]).to match(/\S*/)
+      expect(account_message_res_array[2]).to match(/https\:\/\//)
     end
   end
 
