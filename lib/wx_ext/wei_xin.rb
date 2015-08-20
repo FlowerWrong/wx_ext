@@ -401,7 +401,7 @@ module WxExt
         /.*\<h4\>名称\<\/h4\>\s*\<div\s*class\=\"meta_opr\"\>\s*\<\/div\>\s*\<div\s*class\=\"meta_content\"\>\s*(\S*)/
       reg_type = /.*\<div\s*class\=\"meta_content\"\>\s*(\S*)\s*\<span\s*class\=\"mini_tips weak_text\"\>/
       reg_img = /.*fakeid\=(\d*)/
-      head_img = "https://mp.weixin.qq.com/misc/getheadimg?fakeid=#{$1}&token=668749194&lang=zh_CN"\
+      head_img = "https://mp.weixin.qq.com/misc/getheadimg?fakeid=#{ $1 }&token=#{@token}&lang=zh_CN"\
          if reg_img =~ res.to_s
       account_type = $1 if reg_type =~ res.to_s
       nickname = $1 if reg_nickname =~ res.to_s
