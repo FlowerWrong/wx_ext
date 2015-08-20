@@ -136,6 +136,17 @@ describe WxExt::WeiXin do
     end
   end
 
+  it 'should get account message' do
+    res_hash = @weixin.login
+    flag = @weixin.init
+    if flag
+      account_message_res_array = @weixin.get_account_message
+      expect(account_message_res_array[0]).to match(/\S*/)
+      expect(account_message_res_array[1]).to match(/\S*/)
+      expect(account_message_res_array[2]).to match(/https\:\/\//)
+    end
+  end
+
   it "should get contact info" do
     res_hash = @weixin.login
     flag = @weixin.init
