@@ -103,7 +103,6 @@ describe WxExt::WeiXin do
     @weixin.login
     @weixin.init
     star_res_hash = @weixin.un_collect_msg('207835874')
-    p star_res_hash
   end
 
   it 'should get fans count' do
