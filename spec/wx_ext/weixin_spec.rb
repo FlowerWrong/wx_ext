@@ -136,6 +136,15 @@ describe WxExt::WeiXin do
     end
   end
 
+  it 'should get account message' do
+    res_hash = @weixin.login
+    flag = @weixin.init
+    if flag
+      account_message_res_hash = @weixin.get_account_message
+      expect(account_message_res_hash.count).to eql(3)
+    end
+  end
+
   it "should get contact info" do
     res_hash = @weixin.login
     flag = @weixin.init
