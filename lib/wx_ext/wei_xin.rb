@@ -65,6 +65,7 @@ module WxExt
       # -21: "user not exist"
       res_hash = JSON.parse res.to_s
       sta = res_hash['base_resp']['ret'].to_s
+
       if sta == '0'
         token_reg = /.*token=(\d+)\".*/
         @token = $1 if token_reg =~ res.to_s
@@ -82,6 +83,11 @@ module WxExt
         return_hash = {
           status: -21,
           msg: 'user_not_exist'
+        }
+      elsif sta == '-7'
+        return_hash = {
+          status: -21,
+          msg: 'access deny'
         }
       else
         return_hash = {
@@ -437,7 +443,6 @@ module WxExt
       resource = RestClient::Resource.new(@home_url, headers: headers,
                                           cookies: @cookies)
       res = resource[post_uri].post params
-      #
       # 10706: "customer block" => "48小时内的才行"
       JSON.parse res.to_s
     end
@@ -528,6 +533,11 @@ module WxExt
       else
         return nil
       end
+    end
+
+    # 返回token
+    def get_token
+      @token
     end
 
     private
