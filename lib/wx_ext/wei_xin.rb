@@ -390,6 +390,24 @@ module WxExt
       return_hash
     end
 
+    # Get this weixin account message (include head_img, account_type, nickname).
+    #
+    # @return [String, String, String] .
+    def get_account_message
+      url = 'https://mp.weixin.qq.com/cgi-bin/settingpage'\
+            "?t=setting/index&action=index&token=#{ @token }&lang=zh_CN"
+      res = RestClient.get(url, cookies: @cookies)
+      reg_nickname = \
+        /.*\<h4\>名称\<\/h4\>\s*\<div\s*class\=\"meta_opr\"\>\s*\<\/div\>\s*\<div\s*class\=\"meta_content\"\>\s*(\S*)/
+      reg_type = /.*\<div\s*class\=\"meta_content\"\>\s*(\S*)\s*\<span\s*class\=\"mini_tips weak_text\"\>/
+      reg_img = /.*fakeid\=(\d*)/
+      head_img = "https://mp.weixin.qq.com/misc/getheadimg?fakeid=#{$1}&token=668749194&lang=zh_CN"\
+         if reg_img =~ res.to_s
+      account_type = $1 if reg_type =~ res.to_s
+      nickname = $1 if reg_nickname =~ res.to_s
+      [nickname, account_type, head_img]
+    end
+
     # Quick reply to user.
     #
     # @param [String] content
