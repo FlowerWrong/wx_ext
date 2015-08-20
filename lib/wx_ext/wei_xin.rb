@@ -535,6 +535,11 @@ module WxExt
       end
     end
 
+    # 返回token
+    def get_token
+      @token
+    end
+
     private
 
     def decode_cookies(cookies)
